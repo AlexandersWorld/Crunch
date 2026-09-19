@@ -14,6 +14,10 @@ void UCrunchAnimInstance::NativeInitializeAnimation()
 
 void UCrunchAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 {
+	if (OwnerCharacter)
+	{
+		Speed = OwnerCharacter->GetVelocity().Length();
+	}
 }
 
 void UCrunchAnimInstance::NativeThreadSafeUpdateAnimation(float DeltaSeconds)
