@@ -23,6 +23,12 @@ public:
 	FORCEINLINE float GetSpeed() const { return Speed; }
 	
 	UFUNCTION(BlueprintCallable, meta=(BlueprintThreadSafe))
+	FORCEINLINE float GetYawSpeed() const { return YawSpeed; }
+	
+	UFUNCTION(BlueprintCallable, meta=(BlueprintThreadSafe))
+	FORCEINLINE float GetSmoothedYawSpeed() const { return SmoothedYawSpeed; }
+	
+	UFUNCTION(BlueprintCallable, meta=(BlueprintThreadSafe))
 	FORCEINLINE bool IsMoving() const { return Speed != 0.0f; }
 	
 	UFUNCTION(BlueprintCallable, meta=(BlueprintThreadSafe))
@@ -35,4 +41,11 @@ private:
 	TObjectPtr<UCharacterMovementComponent> OwnerMovementComponent;
 	
 	float Speed;
+	float YawSpeed;
+	float SmoothedYawSpeed;
+	
+	FRotator BodyPreviousRotation;
+	
+	UPROPERTY(EditAnywhere, Category="Animation")
+	float YawSpeedSmoothLerpSpeed = 1.f;
 };
