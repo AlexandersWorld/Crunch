@@ -25,6 +25,11 @@ void UCrunchAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 		YawSpeed = BodyRotationDelta.Yaw / DeltaSeconds;
 		SmoothedYawSpeed = UKismetMathLibrary::FInterpTo(SmoothedYawSpeed, YawSpeed, DeltaSeconds, YawSpeedSmoothLerpSpeed);
 	}
+	
+	if (OwnerMovementComponent)
+	{
+		bIsJumping = OwnerMovementComponent->IsFalling();
+	}
 }
 
 void UCrunchAnimInstance::NativeThreadSafeUpdateAnimation(float DeltaSeconds)

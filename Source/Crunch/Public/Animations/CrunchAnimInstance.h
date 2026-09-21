@@ -34,6 +34,12 @@ public:
 	UFUNCTION(BlueprintCallable, meta=(BlueprintThreadSafe))
 	FORCEINLINE bool IsNotMoving() const { return Speed == 0.0f; }
 	
+	UFUNCTION(BlueprintCallable, meta=(BlueprintThreadSafe))
+	FORCEINLINE bool GetIsJumping() const { return bIsJumping; }
+	
+	UFUNCTION(BlueprintCallable, meta=(BlueprintThreadSafe))
+	FORCEINLINE bool GetIsOnGround() const { return !bIsJumping; }
+	
 private:
 	UPROPERTY()
 	TObjectPtr<ACharacter> OwnerCharacter;
@@ -43,6 +49,8 @@ private:
 	float Speed;
 	float YawSpeed;
 	float SmoothedYawSpeed;
+	
+	bool bIsJumping;
 	
 	FRotator BodyPreviousRotation;
 	
