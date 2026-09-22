@@ -24,6 +24,8 @@ void UCrunchAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 		
 		YawSpeed = BodyRotationDelta.Yaw / DeltaSeconds;
 		SmoothedYawSpeed = UKismetMathLibrary::FInterpTo(SmoothedYawSpeed, YawSpeed, DeltaSeconds, YawSpeedSmoothLerpSpeed);
+		const FRotator ControlRotation = OwnerCharacter->GetBaseAimRotation();
+		LookRotationOffset = UKismetMathLibrary::NormalizedDeltaRotator(ControlRotation, BodyRotation);
 	}
 	
 	if (OwnerMovementComponent)
