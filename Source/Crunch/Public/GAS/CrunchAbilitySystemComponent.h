@@ -14,4 +14,9 @@ class CRUNCH_API UCrunchAbilitySystemComponent : public UAbilitySystemComponent
 {
 	GENERATED_BODY()
 	
+public:
+	void ApplyInitialEffects();	
+	
+private:
+	TArray<TSubclassOf<UGameplayEffect>> InitialEffects;
 };
