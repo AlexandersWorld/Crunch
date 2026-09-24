@@ -19,18 +19,14 @@ public:
 	ACrunchCharacter();
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
+	void ServerSideInit();
+	void ClientSideInit();
 
 	/*GAMEPLAY ABILITY SYSTEM START*/
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	/*GAMEPLAY ABILITY SYSTEM END*/
-	
-	
-	
-protected:
-	
-	
 private:
-	UPROPERTY()
+	UPROPERTY(VisibleDefaultsOnly, Category = "Gameplay Ability")
 	UCrunchAbilitySystemComponent* CrunchAbilitySystemComponent;
 	
 	UPROPERTY()
