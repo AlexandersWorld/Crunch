@@ -7,6 +7,7 @@
 #include "CrunchPlayerController.generated.h"
 
 class ACrunchPlayerCharacter;
+class UGameplayWidget;
 
 /**
  * 
@@ -27,4 +28,12 @@ protected:
 private:
 	UPROPERTY()
 	ACrunchPlayerCharacter* CrunchPlayerCharacter;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "UI")
+	TSubclassOf<UGameplayWidget> GameplayWidgetClass;
+	
+	UPROPERTY()
+	UGameplayWidget* GameplayWidget;
+	
+	void SpawnGameplayWidget();
 };
