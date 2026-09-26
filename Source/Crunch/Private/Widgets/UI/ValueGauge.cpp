@@ -1,5 +1,7 @@
 ﻿
 #include "Widgets/UI/ValueGauge.h"
+
+#include "AbilitySystemComponent.h"
 #include "Components/ProgressBar.h"
 #include "Components/TextBlock.h"
 
@@ -10,8 +12,11 @@ void UValueGauge::NativeConstruct()
 	ProgressBar->SetFillColorAndOpacity(BarColor);
 }
 
-void UValueGauge::SetValue(float NewValue, float NewMaxValue) const
+void UValueGauge::SetValue(float NewValue, float NewMaxValue)
 {
+	CachedValue = NewValue;
+	CachedMaxValue = NewMaxValue;
+	
 	if (NewMaxValue == 0)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Value Gauge: %s, NewMaxValue can't be 0"), *GetName());
@@ -30,4 +35,33 @@ void UValueGauge::SetValue(float NewValue, float NewMaxValue) const
 			FText::AsNumber(NewMaxValue, &FormatOps)
 		)
 	);
+}
+
+void UValueGauge::SetAndBoundToGameplayAttribute(UAbilitySystemComponent* AbilitySystemComponent,
+	const FGameplayAttribute& Attribute, const FGameplayAttribute& MaxAttribute)
+{
+	if (AbilitySystemComponent)
+	{
+		bool bFound;
+		const float Value = AbilitySystemComponent->GetGameplayAttributeValue(Attribute, bFound);
+		const float MaxValue = AbilitySystemComponent->GetGameplayAttributeValue(MaxAttribute, bFound);
+		
+		if (bFound)
+		{
+			SetValue(Value, MaxValue);
+		}
+		
+		AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(Attribute).AddUObject(this, &UValueGauge::ValueChanged);
+		AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(MaxAttribute).AddUObject(this, &UValueGauge::MaxValueChanged);
+	}
+}
+
+void UValueGauge::ValueChanged(const FOnAttributeChangeData& ChangedData)
+{
+	SetValue(ChangedData.NewValue, CachedMaxValue);
+}
+
+void UValueGauge::MaxValueChanged(const FOnAttributeChangeData& ChangedData)
+{
+	SetValue(CachedValue, ChangedData.NewValue);
 }
