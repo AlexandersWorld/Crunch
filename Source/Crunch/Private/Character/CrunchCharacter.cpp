@@ -1,8 +1,10 @@
 ﻿
 #include "Crunch/Public/Character/CrunchCharacter.h"
 #include "GAS/CrunchAbilitySystemComponent.h"
+#include "Components/WidgetComponent.h"
 #include "GAS/Attributes/CrunchAttributeSet.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "Widgets/Gameplay/OverHeadStatsGauge.h"
 
 ACrunchCharacter::ACrunchCharacter()
 {
@@ -11,11 +13,14 @@ ACrunchCharacter::ACrunchCharacter()
 	
 	CrunchAbilitySystemComponent = CreateDefaultSubobject<UCrunchAbilitySystemComponent>("Crunch AbilitySystem Component");
 	CrunchAttributeSet = CreateDefaultSubobject<UCrunchAttributeSet>("Crunch Attribute Set");
+	OverHeadWidgetComponent = CreateDefaultSubobject<UWidgetComponent>("Over Head Widget Component");
+	OverHeadWidgetComponent->SetupAttachment(GetRootComponent());
 }
 
 void ACrunchCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+	ConfigureOverHeadStatusWidget();
 }
 
 void ACrunchCharacter::Tick(float DeltaTime)
@@ -37,4 +42,15 @@ void ACrunchCharacter::ClientSideInit()
 UAbilitySystemComponent* ACrunchCharacter::GetAbilitySystemComponent() const
 {
 	return CrunchAbilitySystemComponent;
+}
+
+void ACrunchCharacter::ConfigureOverHeadStatusWidget()
+{
+	if (!IsValid(OverHeadWidgetComponent)) return;
+	
+	UOverHeadStatsGauge* OverheadStatsGauge = Cast<UOverHeadStatsGauge>(OverHeadWidgetComponent->GetUserWidgetObject());
+	if (IsValid(OverheadStatsGauge))
+	{
+		OverheadStatsGauge->ConfigureWithASC(GetAbilitySystemComponent());
+	}
 }

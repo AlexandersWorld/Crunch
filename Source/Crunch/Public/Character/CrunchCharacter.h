@@ -9,6 +9,7 @@
 
 class UCrunchAbilitySystemComponent;
 class UCrunchAttributeSet;
+class UWidgetComponent;
 
 UCLASS()
 class CRUNCH_API ACrunchCharacter : public ACharacter, public IAbilitySystemInterface
@@ -31,4 +32,9 @@ private:
 	
 	UPROPERTY()
 	UCrunchAttributeSet* CrunchAttributeSet;
+	
+	UPROPERTY(VisibleDefaultsOnly, Category="Gameplay Ability")
+	UWidgetComponent* OverHeadWidgetComponent;
+	
+	void ConfigureOverHeadStatusWidget();
 };
