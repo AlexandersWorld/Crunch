@@ -9,6 +9,7 @@
 
 class UCrunchAbilitySystemComponent;
 class UCrunchAttributeSet;
+class UWidgetComponent;
 
 UCLASS()
 class CRUNCH_API ACrunchCharacter : public ACharacter, public IAbilitySystemInterface
@@ -19,8 +20,10 @@ public:
 	ACrunchCharacter();
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
+	virtual void PossessedBy(AController* NewController) override;
 	void ServerSideInit();
 	void ClientSideInit();
+	bool IsLocallyControlledByPlayer() const;
 
 	/*GAMEPLAY ABILITY SYSTEM START*/
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
@@ -31,4 +34,19 @@ private:
 	
 	UPROPERTY()
 	UCrunchAttributeSet* CrunchAttributeSet;
+	
+	UPROPERTY(VisibleDefaultsOnly, Category="Gameplay Ability")
+	UWidgetComponent* OverHeadWidgetComponent;
+	
+	void ConfigureOverHeadStatusWidget();
+	
+	UPROPERTY(EditDefaultsOnly, Category = "UI")
+	float HeadStatGaugeVisibilityCheckUpdateGap = 1.f;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "UI")
+	float HeadStatGaugeVisibilityRangeSquared = 10000000.f;
+	
+	FTimerHandle HeadStatGaugeVisibilityUpdateTimerHandle;
+	
+	void UpdateHeadGaugeVisibility() const;
 };
