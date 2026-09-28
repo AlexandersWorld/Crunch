@@ -18,6 +18,7 @@ class CRUNCH_API UGA_Combo : public UCrunchGameplayAbility
 public:
 	
 protected:
+	UGA_Combo();
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
 	
 private:
