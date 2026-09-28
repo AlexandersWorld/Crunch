@@ -43,6 +43,7 @@ void ACrunchCharacter::ServerSideInit()
 {
 	CrunchAbilitySystemComponent->InitAbilityActorInfo(this, this);
 	CrunchAbilitySystemComponent->ApplyInitialEffects();
+	CrunchAbilitySystemComponent->GiveInitialAbilities();
 }
 
 void ACrunchCharacter::ClientSideInit()

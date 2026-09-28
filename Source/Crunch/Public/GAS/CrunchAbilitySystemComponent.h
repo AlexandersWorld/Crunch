@@ -15,7 +15,8 @@ class CRUNCH_API UCrunchAbilitySystemComponent : public UAbilitySystemComponent
 	GENERATED_BODY()
 	
 public:
-	void ApplyInitialEffects();	
+	void ApplyInitialEffects();
+	void GiveInitialAbilities();
 	
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "Gameplay Effects")
