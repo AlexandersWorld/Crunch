@@ -20,4 +20,10 @@ public:
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "Gameplay Effects")
 	TArray<TSubclassOf<UGameplayEffect>> InitialEffects;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Gameplay Abilities")
+	TArray<TSubclassOf<UGameplayAbility>> InitialAbilities;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Gameplay Abilities")
+	TArray<TSubclassOf<UGameplayAbility>> Abilities;
 };
