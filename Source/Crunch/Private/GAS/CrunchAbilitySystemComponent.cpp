@@ -17,13 +17,13 @@ void UCrunchAbilitySystemComponent::GiveInitialAbilities()
 {
 	if (!GetOwner() || !GetOwner()->HasAuthority()) return;
 	
-	for (const TSubclassOf<UGameplayAbility>& AbilityClass : Abilities)
+	for (const TPair<ECrunchAbilityInputID,TSubclassOf<UGameplayAbility>>& AbilityPair : Abilities)
 	{
-		GiveAbility(FGameplayAbilitySpec(AbilityClass, 0, -1, nullptr));
+		GiveAbility(FGameplayAbilitySpec(AbilityPair.Value, 0, static_cast<int32>(AbilityPair.Key), nullptr));
 	}
 	
-	for (const TSubclassOf<UGameplayAbility>& AbilityClass : InitialAbilities)
+	for (const TPair<ECrunchAbilityInputID,TSubclassOf<UGameplayAbility>>& AbilityPair : InitialAbilities)
 	{
-		GiveAbility(FGameplayAbilitySpec(AbilityClass, 1, -1, nullptr));
+		GiveAbility(FGameplayAbilitySpec(AbilityPair.Value, 1, static_cast<int32>(AbilityPair.Key), nullptr));
 	}
 }
