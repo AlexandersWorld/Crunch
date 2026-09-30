@@ -1,6 +1,8 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Player/CrunchPlayerCharacter.h"
+
+#include "AbilitySystemComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "Camera/CameraComponent.h"
@@ -44,7 +46,11 @@ void ACrunchPlayerCharacter::SetupPlayerInputComponent(class UInputComponent* Pl
 		EnhancedInputComponent->BindAction(JumpInputAction, ETriggerEvent::Triggered, this, &ACrunchPlayerCharacter::Jump);
 		EnhancedInputComponent->BindAction(LookInputAction, ETriggerEvent::Triggered, this, &ACrunchPlayerCharacter::HandleLookInput);
 		EnhancedInputComponent->BindAction(MoveInputAction, ETriggerEvent::Triggered, this, &ACrunchPlayerCharacter::HandleMoveInput);
-
+		
+		for (const TPair<ECrunchAbilityInputID, UInputAction*>& Pair : GameplayAbilityInputActions)
+		{
+			EnhancedInputComponent->BindAction(Pair.Value, ETriggerEvent::Triggered, this, &ACrunchPlayerCharacter::HandleAbilityInput, Pair.Key);
+		}
 	}
 }
 
@@ -62,6 +68,20 @@ void ACrunchPlayerCharacter::HandleMoveInput(const FInputActionValue& InputActio
 	InputValue.Normalize();
 	
 	AddMovementInput(GetMoveForwardDirection() * InputValue.Y + GetLookRightDirection() * InputValue.X);
+}
+
+void ACrunchPlayerCharacter::HandleAbilityInput(const FInputActionValue& InputActionValue,
+	ECrunchAbilityInputID InputID)
+{
+	bool bPressed = InputActionValue.Get<bool>();
+	if (bPressed)
+	{
+		GetAbilitySystemComponent()->AbilityLocalInputPressed(static_cast<int32>(InputID));
+	}
+	else
+	{
+		GetAbilitySystemComponent()->AbilityLocalInputReleased(static_cast<int32>(InputID));
+	}
 }
 
 FVector ACrunchPlayerCharacter::GetLookRightDirection() const

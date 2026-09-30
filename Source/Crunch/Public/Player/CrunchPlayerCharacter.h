@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "InputActionValue.h"
 #include "Character/CrunchCharacter.h"
+#include "GAS/CrunchGameplayAbilityTypes.h"
 #include "CrunchPlayerCharacter.generated.h"
 
 class UInputMappingContext;
@@ -20,6 +21,8 @@ public:
 	
 	virtual void PawnClientRestart() override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	
+	
 private:
 	UPROPERTY(VisibleDefaultsOnly, Category = "View")
 	class USpringArmComponent* CameraBoom;
@@ -27,6 +30,14 @@ private:
 	UPROPERTY(VisibleDefaultsOnly, Category = "View")
 	class UCameraComponent* ViewCam;
 	
+	FVector GetLookRightDirection() const;
+	FVector GetLookForwardDirection() const;
+	FVector GetMoveForwardDirection() const;
+	
+private:
+	/**********************************************************/	
+	/*                           Input                        */
+	/**********************************************************/	
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	UInputMappingContext* GamePlayInputMappingContext;
 	
@@ -37,12 +48,13 @@ private:
 	UInputAction* LookInputAction;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
+	TMap<ECrunchAbilityInputID, UInputAction*> GameplayAbilityInputActions;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	UInputAction* MoveInputAction;
 	
 	void HandleLookInput(const FInputActionValue& InputActionValue);
 	void HandleMoveInput(const FInputActionValue& InputActionValue);
-	
-	FVector GetLookRightDirection() const;
-	FVector GetLookForwardDirection() const;
-	FVector GetMoveForwardDirection() const;
+	void HandleAbilityInput(const FInputActionValue& InputActionValue, ECrunchAbilityInputID InputID);
+
 };
