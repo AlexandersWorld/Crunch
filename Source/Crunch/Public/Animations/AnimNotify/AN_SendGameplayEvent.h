@@ -16,9 +16,9 @@ class CRUNCH_API UAN_SendGameplayEvent : public UAnimNotify
 	GENERATED_BODY()
 public:
 	virtual void Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, const FAnimNotifyEventReference& EventReference) override;
+	virtual FString GetNotifyName_Implementation() const override;
 	
 private:
 	UPROPERTY(EditAnywhere, Category="Gameplay Ability")
 	FGameplayTag EventTag;
-	virtual FString GetNotifyName_Implementation() const override;
 };
