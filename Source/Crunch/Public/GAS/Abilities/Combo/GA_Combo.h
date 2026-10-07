@@ -31,6 +31,14 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category="Animation")
 	UAnimMontage* ComboMontage;
 	
+	UPROPERTY(EditDefaultsOnly, Category="Gameplay Effect")
+	TMap<FName, TSubclassOf<UGameplayEffect>> DamageEffectMap;
+	
+	UPROPERTY(EditDefaultsOnly, Category="Gameplay Effect")
+	TSubclassOf<UGameplayEffect> DefaultDamageEffect;
+	
+	TSubclassOf<UGameplayEffect> GetDamageEffectForCurrentCombo() const;
+	
 	void TryCommitCombo();
 	
 	UFUNCTION()
