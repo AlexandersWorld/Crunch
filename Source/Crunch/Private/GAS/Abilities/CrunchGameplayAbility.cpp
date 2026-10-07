@@ -17,7 +17,8 @@ TArray<FHitResult> UCrunchGameplayAbility::GetHitResultFromSweepLocationTargetDa
 	const FGameplayAbilityTargetDataHandle& TargetDataHandle, float SphereSweepRadius, bool bDrawDebug,
 	bool bIgnoreSelf) const
 {
-	TArray<FHitResult> OutResult;
+	TArray<FHitResult> OutResults;
+	TSet<AActor*> HitActors;
 	
 	for (const TSharedPtr<FGameplayAbilityTargetData> TargetData : TargetDataHandle.Data)
 	{
@@ -48,6 +49,14 @@ TArray<FHitResult> UCrunchGameplayAbility::GetHitResultFromSweepLocationTargetDa
 			DrawDebugTrace,
 			Results,
 			false);
+		
+		for (const FHitResult& Result : Results)
+		{
+			if (HitActors.Contains(Result.GetActor())) continue;
+			
+			HitActors.Add(Result.GetActor());
+			OutResults.Add(Result);
+		}
 	}
-	return OutResult;
+	return OutResults;
 }
