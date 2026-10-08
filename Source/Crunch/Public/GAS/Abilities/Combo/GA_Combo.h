@@ -31,6 +31,11 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category="Animation")
 	UAnimMontage* ComboMontage;
 	
+	
+	UPROPERTY(EditDefaultsOnly, Category="Animation")
+	float TargetSweepSphereRadius;
+	
+	
 	UPROPERTY(EditDefaultsOnly, Category="Gameplay Effect")
 	TMap<FName, TSubclassOf<UGameplayEffect>> DamageEffectMap;
 	
