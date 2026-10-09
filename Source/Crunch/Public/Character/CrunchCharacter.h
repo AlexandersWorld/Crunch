@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "GameplayTagContainer.h"
 #include "AbilitySystemInterface.h"
 #include "CrunchCharacter.generated.h"
 
@@ -29,6 +30,8 @@ public:
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	/*GAMEPLAY ABILITY SYSTEM END*/
 private:
+	void BindGASChangedDelegates();
+	void DeathTagUpdated(const FGameplayTag Tag, int32 NewCount);
 	UPROPERTY(VisibleDefaultsOnly, Category = "Gameplay Ability")
 	UCrunchAbilitySystemComponent* CrunchAbilitySystemComponent;
 	
@@ -48,5 +51,15 @@ private:
 	
 	FTimerHandle HeadStatGaugeVisibilityUpdateTimerHandle;
 	
+	UPROPERTY(EditDefaultsOnly, Category = "Death")
+	UAnimMontage* DeathMontage;
+	
+	void SetStatusGaugeEnable(bool bIsEnabled);
+	void PlayDeathAnimation();
 	void UpdateHeadGaugeVisibility() const;
+	void StartDeathSequence();
+	void Respawn();
+	
+	virtual void OnDead();
+	virtual void OnRespawn();
 };

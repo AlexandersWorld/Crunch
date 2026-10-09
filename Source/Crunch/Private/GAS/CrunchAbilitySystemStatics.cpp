@@ -8,3 +8,8 @@ FGameplayTag UCrunchAbilitySystemStatics::GetBasicAttackAbilityTag()
 {
 	return FGameplayTag::RequestGameplayTag("Ability.BasicAttack");
 }
+
+FGameplayTag UCrunchAbilitySystemStatics::GetDeadStatTag()
+{
+	return FGameplayTag::RequestGameplayTag("Stats.Dead");
+}

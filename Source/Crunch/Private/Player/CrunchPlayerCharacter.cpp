@@ -84,6 +84,22 @@ void ACrunchPlayerCharacter::HandleAbilityInput(const FInputActionValue& InputAc
 	}
 }
 
+void ACrunchPlayerCharacter::OnDead()
+{
+	if (APlayerController* PlayerController = GetController<APlayerController>())
+	{
+		DisableInput(PlayerController);
+	}
+}
+
+void ACrunchPlayerCharacter::OnRespawn()
+{
+	if (APlayerController* PlayerController = GetController<APlayerController>())
+	{
+		EnableInput(PlayerController);
+	}
+}
+
 FVector ACrunchPlayerCharacter::GetLookRightDirection() const
 {
 	return ViewCam->GetRightVector();
