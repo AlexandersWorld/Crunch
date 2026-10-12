@@ -34,13 +34,26 @@ void UCrunchAbilitySystemComponent::GiveInitialAbilities()
 	}
 }
 
+void UCrunchAbilitySystemComponent::ApplyFullStatEffect()
+{
+	AuthApplyGameplayEffect(FullStatEffect);
+}
+
 void UCrunchAbilitySystemComponent::HealthUpdated(const FOnAttributeChangeData& ChangeData)
 {
 	if (!GetOwner()) return;
 	
 	if (ChangeData.NewValue <= 0 && GetOwner()->HasAuthority() && DeathEffect)
 	{
-		FGameplayEffectSpecHandle EffectSpecHandle = MakeOutgoingSpec(DeathEffect, 1, MakeEffectContext());
+		AuthApplyGameplayEffect(DeathEffect);
+	}
+}
+
+void UCrunchAbilitySystemComponent::AuthApplyGameplayEffect(TSubclassOf<UGameplayEffect> GameplayEffect, int Level)
+{
+	if (GetOwner() && GetOwner()->HasAuthority())
+	{
+		FGameplayEffectSpecHandle EffectSpecHandle = MakeOutgoingSpec(GameplayEffect, Level, MakeEffectContext());
 		ApplyGameplayEffectSpecToSelf(*EffectSpecHandle.Data.Get());
 	}
 }

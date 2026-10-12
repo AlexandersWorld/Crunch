@@ -153,7 +153,15 @@ void ACrunchCharacter::StartDeathSequence()
 void ACrunchCharacter::Respawn()
 {
 	OnRespawn();
-	UE_LOG(LogTemp, Warning, TEXT("Respawn"));
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
+	GetMesh()->GetAnimInstance()->StopAllMontages(0.f);
+	SetStatusGaugeEnable(true);
+	
+	if (CrunchAbilitySystemComponent)
+	{
+		CrunchAbilitySystemComponent->ApplyFullStatEffect();
+	}
 }
 
 void ACrunchCharacter::OnDead()
