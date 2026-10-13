@@ -26,6 +26,7 @@ void ACrunchCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	ConfigureOverHeadStatusWidget();
+	MeshRelativeTransform = GetMesh()->GetRelativeTransform();
 }
 
 void ACrunchCharacter::Tick(float DeltaTime)
@@ -126,7 +127,35 @@ void ACrunchCharacter::PlayDeathAnimation()
 {
 	if (DeathMontage)
 	{
-		PlayAnimMontage(DeathMontage);
+		float MontageDuration = PlayAnimMontage(DeathMontage);
+		GetWorldTimerManager().SetTimer(
+			DeathMontageTimerHandle, 
+			this, 
+			&ACrunchCharacter::DeathMontageFinished, 
+			MontageDuration + DeathMontageFinishedTimeShift
+			);
+	}
+}
+
+void ACrunchCharacter::DeathMontageFinished()
+{
+	SetRagdollEnabled(true);
+}
+
+void ACrunchCharacter::SetRagdollEnabled(bool bIsEnabled)
+{
+	if (bIsEnabled)
+	{
+		GetMesh()->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
+		GetMesh()->SetSimulatePhysics(true);
+		GetMesh()->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
+	}
+	else
+	{
+		GetMesh()->SetSimulatePhysics(false);
+		GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		GetMesh()->AttachToComponent(GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
+		GetMesh()->SetRelativeTransform(MeshRelativeTransform);
 	}
 }
 
@@ -153,6 +182,7 @@ void ACrunchCharacter::StartDeathSequence()
 void ACrunchCharacter::Respawn()
 {
 	OnRespawn();
+	SetRagdollEnabled(false);
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
 	GetMesh()->GetAnimInstance()->StopAllMontages(0.f);

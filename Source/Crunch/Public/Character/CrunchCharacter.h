@@ -54,6 +54,16 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Death")
 	UAnimMontage* DeathMontage;
 	
+	UPROPERTY(EditDefaultsOnly, Category = "Death")
+	float DeathMontageFinishedTimeShift {-0.8f};
+	
+	FTimerHandle DeathMontageTimerHandle;
+	
+	FTransform MeshRelativeTransform;
+	
+	void DeathMontageFinished();
+	void SetRagdollEnabled(bool bIsEnabled);
+	
 	void SetStatusGaugeEnable(bool bIsEnabled);
 	void PlayDeathAnimation();
 	void UpdateHeadGaugeVisibility() const;
