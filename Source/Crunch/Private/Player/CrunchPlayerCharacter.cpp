@@ -6,6 +6,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "Camera/CameraComponent.h"
+#include "Net/UnrealNetwork.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 
@@ -52,6 +53,22 @@ void ACrunchPlayerCharacter::SetupPlayerInputComponent(class UInputComponent* Pl
 			EnhancedInputComponent->BindAction(Pair.Value, ETriggerEvent::Triggered, this, &ACrunchPlayerCharacter::HandleAbilityInput, Pair.Key);
 		}
 	}
+}
+
+void ACrunchPlayerCharacter::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(ACrunchPlayerCharacter, TeamID);
+}
+
+void ACrunchPlayerCharacter::SetGenericTeamId(const FGenericTeamId& InTeamID)
+{
+	TeamID = InTeamID;
+}
+
+FGenericTeamId ACrunchPlayerCharacter::GetGenericTeamId() const
+{
+	return TeamID;
 }
 
 void ACrunchPlayerCharacter::HandleLookInput(const FInputActionValue& InputActionValue)
