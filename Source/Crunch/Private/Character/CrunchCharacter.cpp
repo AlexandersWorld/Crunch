@@ -188,6 +188,15 @@ void ACrunchCharacter::Respawn()
 	GetMesh()->GetAnimInstance()->StopAllMontages(0.f);
 	SetStatusGaugeEnable(true);
 	
+	if (HasAuthority() && GetController())
+	{
+		TWeakObjectPtr<AActor> StartSpot = GetController()->StartSpot;
+		if (StartSpot.IsValid())
+		{
+			SetActorTransform(StartSpot->GetTransform());
+		}
+	}
+	
 	if (CrunchAbilitySystemComponent)
 	{
 		CrunchAbilitySystemComponent->ApplyFullStatEffect();
