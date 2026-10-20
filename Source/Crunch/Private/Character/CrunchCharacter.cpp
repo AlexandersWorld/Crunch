@@ -190,6 +190,7 @@ void ACrunchCharacter::StartDeathSequence()
 	SetStatusGaugeEnable(false);
 	GetCharacterMovement()->SetMovementMode(MOVE_None);
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	SetAIPerceptionStimuliSourceEnabled(false);
 }
 
 void ACrunchCharacter::Respawn()
@@ -200,6 +201,7 @@ void ACrunchCharacter::Respawn()
 	GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
 	GetMesh()->GetAnimInstance()->StopAllMontages(0.f);
 	SetStatusGaugeEnable(true);
+	SetAIPerceptionStimuliSourceEnabled(true);
 	
 	if (HasAuthority() && GetController())
 	{
@@ -222,6 +224,21 @@ void ACrunchCharacter::OnDead()
 
 void ACrunchCharacter::OnRespawn()
 {
+}
+
+void ACrunchCharacter::SetAIPerceptionStimuliSourceEnabled(bool bIsEnabled)
+{
+	if (PerceptionStimuliSourceComponent)
+	{
+		if (bIsEnabled)
+		{
+			PerceptionStimuliSourceComponent->RegisterWithPerceptionSystem();
+		}
+		else
+		{
+			PerceptionStimuliSourceComponent->UnregisterFromPerceptionSystem();
+		}
+	}
 }
 
 void ACrunchCharacter::SetGenericTeamId(const FGenericTeamId& InTeamID)

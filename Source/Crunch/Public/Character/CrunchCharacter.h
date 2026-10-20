@@ -83,6 +83,7 @@ private:
 	FGenericTeamId TeamID;
 	
 private:
+	void SetAIPerceptionStimuliSourceEnabled(bool bIsEnabled);
 	UPROPERTY()
 	UAIPerceptionStimuliSourceComponent* PerceptionStimuliSourceComponent;
 };

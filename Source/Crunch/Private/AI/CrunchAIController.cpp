@@ -1,5 +1,8 @@
 ﻿#include "AI/CrunchAIController.h"
 
+#include "AbilitySystemBlueprintLibrary.h"
+#include "AbilitySystemComponent.h"
+#include "GAS/CrunchAbilitySystemStatics.h"
 #include "Perception/AIPerceptionComponent.h"
 #include "Perception/AISenseConfig_Sight.h"
 #include "BehaviorTree/BlackboardComponent.h"
@@ -53,8 +56,7 @@ void ACrunchAIController::TargetPerceptionUpdated(AActor* TargetActor,FAIStimulu
 	}
 	else
 	{
-		if (GetCurrentTarget() == TargetActor)
-			SetCurrentTarget(nullptr);
+		ForgetActorIfDead(TargetActor);
 	}
 }
 
@@ -105,4 +107,23 @@ AActor* ACrunchAIController::GetNextPerceivedActor() const
 		}
 	}
 	return nullptr;
+}
+
+void ACrunchAIController::ForgetActorIfDead(AActor* ActorToForget)
+{
+	if (const UAbilitySystemComponent* ActorASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(ActorToForget))
+	{
+		if (ActorASC->HasMatchingGameplayTag(UCrunchAbilitySystemStatics::GetDeadStatTag()))
+		{
+			for (UAIPerceptionComponent::TActorPerceptionContainer::TIterator It = AIPerceptionComponent->GetPerceptualDataIterator(); It; ++It)
+			{
+				if (It->Key != ActorToForget) continue;
+				
+				for (FAIStimulus& Stimulus : It->Value.LastSensedStimuli)
+				{
+					Stimulus.SetStimulusAge(TNumericLimits<float>::Max());
+				}
+			}
+		}
+	}
 }
