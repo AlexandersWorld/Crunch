@@ -55,22 +55,6 @@ void ACrunchPlayerCharacter::SetupPlayerInputComponent(class UInputComponent* Pl
 	}
 }
 
-void ACrunchPlayerCharacter::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
-{
-	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-	DOREPLIFETIME(ACrunchPlayerCharacter, TeamID);
-}
-
-void ACrunchPlayerCharacter::SetGenericTeamId(const FGenericTeamId& InTeamID)
-{
-	TeamID = InTeamID;
-}
-
-FGenericTeamId ACrunchPlayerCharacter::GetGenericTeamId() const
-{
-	return TeamID;
-}
-
 void ACrunchPlayerCharacter::HandleLookInput(const FInputActionValue& InputActionValue)
 {
 	const FVector2D InputValue = InputActionValue.Get<FVector2D>();
@@ -90,8 +74,7 @@ void ACrunchPlayerCharacter::HandleMoveInput(const FInputActionValue& InputActio
 void ACrunchPlayerCharacter::HandleAbilityInput(const FInputActionValue& InputActionValue,
 	ECrunchAbilityInputID InputID)
 {
-	bool bPressed = InputActionValue.Get<bool>();
-	if (bPressed)
+	if (InputActionValue.Get<bool>())
 	{
 		GetAbilitySystemComponent()->AbilityLocalInputPressed(static_cast<int32>(InputID));
 	}

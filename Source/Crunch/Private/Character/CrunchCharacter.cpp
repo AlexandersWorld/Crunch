@@ -9,6 +9,9 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "Widgets/Gameplay/OverHeadStatsGauge.h"
 #include "Kismet/GameplayStatics.h"
+#include "Net/UnrealNetwork.h"
+#include "Perception/AIPerceptionStimuliSourceComponent.h"
+#include "Perception/AISense_Sight.h"
 
 ACrunchCharacter::ACrunchCharacter()
 {
@@ -20,6 +23,8 @@ ACrunchCharacter::ACrunchCharacter()
 	OverHeadWidgetComponent = CreateDefaultSubobject<UWidgetComponent>("Over Head Widget Component");
 	OverHeadWidgetComponent->SetupAttachment(GetRootComponent());
 	BindGASChangedDelegates();
+	
+	PerceptionStimuliSourceComponent = CreateDefaultSubobject<UAIPerceptionStimuliSourceComponent>("Perception Stimuli Source Component");
 }
 
 void ACrunchCharacter::BeginPlay()
@@ -27,6 +32,8 @@ void ACrunchCharacter::BeginPlay()
 	Super::BeginPlay();
 	ConfigureOverHeadStatusWidget();
 	MeshRelativeTransform = GetMesh()->GetRelativeTransform();
+	
+	PerceptionStimuliSourceComponent->RegisterForSense(UAISense_Sight::StaticClass());
 }
 
 void ACrunchCharacter::Tick(float DeltaTime)
@@ -59,6 +66,12 @@ void ACrunchCharacter::ClientSideInit()
 bool ACrunchCharacter::IsLocallyControlledByPlayer() const
 {
 	return GetController() && GetController()->IsLocalPlayerController();
+}
+
+void ACrunchCharacter::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(ACrunchCharacter, TeamID);
 }
 
 UAbilitySystemComponent* ACrunchCharacter::GetAbilitySystemComponent() const
@@ -209,4 +222,14 @@ void ACrunchCharacter::OnDead()
 
 void ACrunchCharacter::OnRespawn()
 {
+}
+
+void ACrunchCharacter::SetGenericTeamId(const FGenericTeamId& InTeamID)
+{
+	TeamID = InTeamID;
+}
+
+FGenericTeamId ACrunchCharacter::GetGenericTeamId() const
+{
+	return TeamID;
 }

@@ -13,7 +13,7 @@ class UInputMappingContext;
 class UInputAction;
 
 UCLASS()
-class CRUNCH_API ACrunchPlayerCharacter : public ACrunchCharacter, public IGenericTeamAgentInterface
+class CRUNCH_API ACrunchPlayerCharacter : public ACrunchCharacter
 {
 	GENERATED_BODY()
 
@@ -22,10 +22,7 @@ public:
 	
 	virtual void PawnClientRestart() override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
-	
-	virtual void SetGenericTeamId(const FGenericTeamId& InTeamID) override;
-	virtual FGenericTeamId GetGenericTeamId() const override;
+
 private:
 	UPROPERTY(VisibleDefaultsOnly, Category = "View")
 	class USpringArmComponent* CameraBoom;
@@ -62,7 +59,4 @@ private:
 	
 	virtual void OnDead() override;
 	virtual void OnRespawn() override;
-	
-	UPROPERTY(Replicated)
-	FGenericTeamId TeamID;
 };

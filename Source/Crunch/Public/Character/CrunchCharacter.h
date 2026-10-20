@@ -6,14 +6,16 @@
 #include "GameFramework/Character.h"
 #include "GameplayTagContainer.h"
 #include "AbilitySystemInterface.h"
+#include "GenericTeamAgentInterface.h"
 #include "CrunchCharacter.generated.h"
 
 class UCrunchAbilitySystemComponent;
 class UCrunchAttributeSet;
 class UWidgetComponent;
+class UAIPerceptionStimuliSourceComponent;
 
 UCLASS()
-class CRUNCH_API ACrunchCharacter : public ACharacter, public IAbilitySystemInterface
+class CRUNCH_API ACrunchCharacter : public ACharacter, public IAbilitySystemInterface, public IGenericTeamAgentInterface
 {
 	GENERATED_BODY()
 
@@ -25,6 +27,10 @@ public:
 	void ServerSideInit();
 	void ClientSideInit();
 	bool IsLocallyControlledByPlayer() const;
+	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
+	
+	virtual void SetGenericTeamId(const FGenericTeamId& InTeamID) override;
+	virtual FGenericTeamId GetGenericTeamId() const override;
 
 	/*GAMEPLAY ABILITY SYSTEM START*/
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
@@ -72,4 +78,11 @@ private:
 	
 	virtual void OnDead();
 	virtual void OnRespawn();
+	
+	UPROPERTY(Replicated)
+	FGenericTeamId TeamID;
+	
+private:
+	UPROPERTY()
+	UAIPerceptionStimuliSourceComponent* PerceptionStimuliSourceComponent;
 };
