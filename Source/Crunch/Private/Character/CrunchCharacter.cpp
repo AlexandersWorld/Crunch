@@ -186,6 +186,12 @@ void ACrunchCharacter::UpdateHeadGaugeVisibility() const
 void ACrunchCharacter::StartDeathSequence()
 {
 	OnDead();
+	
+	if (CrunchAbilitySystemComponent)
+	{
+		CrunchAbilitySystemComponent->CancelAllAbilities();
+	}
+	
 	PlayDeathAnimation();
 	SetStatusGaugeEnable(false);
 	GetCharacterMovement()->SetMovementMode(MOVE_None);
