@@ -232,6 +232,11 @@ void ACrunchCharacter::OnRespawn()
 {
 }
 
+void ACrunchCharacter::OnRep_TeamID()
+{
+	// override in child class
+}
+
 void ACrunchCharacter::SetAIPerceptionStimuliSourceEnabled(bool bIsEnabled)
 {
 	if (PerceptionStimuliSourceComponent)

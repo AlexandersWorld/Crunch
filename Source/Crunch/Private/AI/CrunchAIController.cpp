@@ -139,9 +139,9 @@ void ACrunchAIController::ClearAndDisableAllSenses()
 {
 	AIPerceptionComponent->AgeStimuli(TNumericLimits<float>::Max());
 	
-	for (auto SenseConfigIT = AIPerceptionComponent->GetSensesConfigIterator(); SenseConfigIT; ++SenseConfigIT)
+	for (auto SenseConfigIt = AIPerceptionComponent->GetSensesConfigIterator(); SenseConfigIt; ++SenseConfigIt)
 	{
-		AIPerceptionComponent->SetSenseEnabled((*SenseConfigIT)->GetSenseImplementation(), false);
+		AIPerceptionComponent->SetSenseEnabled((*SenseConfigIt)->GetSenseImplementation(), false);
 	}
 	
 	if (GetBlackboardComponent())
@@ -160,7 +160,7 @@ void ACrunchAIController::EnableAllSenses()
 
 void ACrunchAIController::PawnDeadTagUpdated(const FGameplayTag Tag, int32 Count)
 {
-	if (Count == 0)
+	if (Count != 0)
 	{
 		GetBrainComponent()->StopLogic("Dead");
 		ClearAndDisableAllSenses();

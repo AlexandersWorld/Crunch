@@ -79,8 +79,11 @@ private:
 	virtual void OnDead();
 	virtual void OnRespawn();
 	
-	UPROPERTY(Replicated)
+	UPROPERTY(ReplicatedUsing = OnRep_TeamID)
 	FGenericTeamId TeamID;
+	
+	UFUNCTION()
+	virtual void OnRep_TeamID();
 	
 private:
 	void SetAIPerceptionStimuliSourceEnabled(bool bIsEnabled);
