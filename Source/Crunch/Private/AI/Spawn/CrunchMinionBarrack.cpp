@@ -13,7 +13,10 @@ ACrunchMinionBarrack::ACrunchMinionBarrack()
 void ACrunchMinionBarrack::BeginPlay()
 {
 	Super::BeginPlay();
-	SpawnNewMinions(5);
+	if (HasAuthority())
+	{
+		SpawnNewMinions(5);
+	}
 }
 
 const APlayerStart* ACrunchMinionBarrack::GetNextSpawnSpot()
@@ -44,6 +47,7 @@ void ACrunchMinionBarrack::SpawnNewMinions(int Amt)
 		}
 		ACrunchMinion* NewMinion = GetWorld()->SpawnActorDeferred<ACrunchMinion>(MinionClass, SpawnTransform, this, nullptr, ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn);
 		NewMinion->SetGenericTeamId(BarrackTeamId);
+		NewMinion->FinishSpawning(SpawnTransform);
 		MinionPool.Add(NewMinion);
 	}
 }

@@ -23,7 +23,7 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Spawn")
 	FGenericTeamId BarrackTeamId;
 	
-	UPROPERTY(EditAnywhere, Category = "Spawn")
+	UPROPERTY()
 	TArray<ACrunchMinion*> MinionPool;
 	
 	UPROPERTY(EditAnywhere, Category = "Spawn")
