@@ -28,6 +28,9 @@ private:
 	
 	UPROPERTY(EditAnywhere, Category = "Spawn")
 	float GroupSpawnInterval {5.f};
+
+	UPROPERTY(EditAnywhere, Category = "Spawn")
+	AActor* Goal;
 	
 	UPROPERTY()
 	TArray<ACrunchMinion*> MinionPool;

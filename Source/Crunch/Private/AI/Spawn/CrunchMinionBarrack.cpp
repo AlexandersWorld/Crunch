@@ -16,7 +16,7 @@ void ACrunchMinionBarrack::BeginPlay()
 	if (HasAuthority())
 	{
 		GetWorldTimerManager().SetTimer(SpawnIntervalTimerHandle, this, &ACrunchMinionBarrack::SpawnNewGroup, GroupSpawnInterval, true);
-		SpawnNewMinions(5);
+		SpawnNewMinions(MinionPerGroup);
 	}
 }
 
@@ -71,6 +71,7 @@ void ACrunchMinionBarrack::SpawnNewMinions(int Amt)
 		ACrunchMinion* NewMinion = GetWorld()->SpawnActorDeferred<ACrunchMinion>(MinionClass, SpawnTransform, this, nullptr, ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn);
 		NewMinion->SetGenericTeamId(BarrackTeamId);
 		NewMinion->FinishSpawning(SpawnTransform);
+		NewMinion->SetGoal(Goal);
 		MinionPool.Add(NewMinion);
 	}
 }

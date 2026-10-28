@@ -18,6 +18,7 @@ public:
 	virtual void SetGenericTeamId(const FGenericTeamId& NewTeamID) override;
 	bool IsActive() const;
 	void Activate() const;
+	void SetGoal(AActor* Goal) const;
 protected:
 
 public:
@@ -25,7 +26,9 @@ public:
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Visual")
 	TMap<FGenericTeamId, USkeletalMesh*> SkinMap;
-	
+
+	UPROPERTY(EditDefaultsOnly, Category = "AI")
+	FName GoalBlackboardKeyName {"Goal"};
 private:
 	virtual void OnRep_TeamID() override;
 };

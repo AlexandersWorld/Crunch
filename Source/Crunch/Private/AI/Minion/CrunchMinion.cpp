@@ -4,6 +4,8 @@
 
 #include "AbilitySystemComponent.h"
 #include "GAS/CrunchAbilitySystemStatics.h"
+#include "AIController.h"
+#include "BehaviorTree/BlackboardComponent.h"
 
 ACrunchMinion::ACrunchMinion()
 {
@@ -32,6 +34,17 @@ void ACrunchMinion::Activate() const
 {
 	GetAbilitySystemComponent()->RemoveActiveEffectsWithGrantedTags(
 		FGameplayTagContainer(UCrunchAbilitySystemStatics::GetDeadStatTag()));
+}
+
+void ACrunchMinion::SetGoal(AActor* Goal) const
+{
+	if (AAIController* AIController = GetController<AAIController>())
+	{
+		if (UBlackboardComponent* BlackboardComponent = AIController->GetBlackboardComponent())
+		{
+			BlackboardComponent->SetValueAsObject(GoalBlackboardKeyName, Goal);
+		}
+	}
 }
 
 void ACrunchMinion::PickSkinBasedOnTeamID()
