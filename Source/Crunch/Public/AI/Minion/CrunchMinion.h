@@ -16,6 +16,8 @@ public:
 	virtual void BeginPlay() override;
 
 	virtual void SetGenericTeamId(const FGenericTeamId& NewTeamID) override;
+	bool IsActive() const;
+	void Activate() const;
 protected:
 
 public:

@@ -2,6 +2,9 @@
 
 #include "AI/Minion/CrunchMinion.h"
 
+#include "AbilitySystemComponent.h"
+#include "GAS/CrunchAbilitySystemStatics.h"
+
 ACrunchMinion::ACrunchMinion()
 {
 	PrimaryActorTick.bCanEverTick = false;
@@ -17,6 +20,18 @@ void ACrunchMinion::SetGenericTeamId(const FGenericTeamId& NewTeamID)
 {
 	Super::SetGenericTeamId(NewTeamID);
 	PickSkinBasedOnTeamID();
+}
+
+bool ACrunchMinion::IsActive() const
+{
+	return !GetAbilitySystemComponent()->HasMatchingGameplayTag(
+		UCrunchAbilitySystemStatics::GetDeadStatTag());
+}
+
+void ACrunchMinion::Activate() const
+{
+	GetAbilitySystemComponent()->RemoveActiveEffectsWithGrantedTags(
+		FGameplayTagContainer(UCrunchAbilitySystemStatics::GetDeadStatTag()));
 }
 
 void ACrunchMinion::PickSkinBasedOnTeamID()

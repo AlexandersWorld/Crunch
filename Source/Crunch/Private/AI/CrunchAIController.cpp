@@ -38,11 +38,12 @@ void ACrunchAIController::BeginPlay()
 void ACrunchAIController::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
-	SetGenericTeamId(FGenericTeamId(0));
 	
 	if (IGenericTeamAgentInterface* PawnTeamInterface = Cast<IGenericTeamAgentInterface>(InPawn))
 	{
-		PawnTeamInterface->SetGenericTeamId(GetGenericTeamId());
+		SetGenericTeamId(PawnTeamInterface->GetGenericTeamId());
+		ClearAndDisableAllSenses();
+		EnableAllSenses();
 	}
 	
 	if (UAbilitySystemComponent* PawnASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(InPawn))
