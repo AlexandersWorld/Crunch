@@ -35,6 +35,9 @@ public:
 	/*GAMEPLAY ABILITY SYSTEM START*/
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	/*GAMEPLAY ABILITY SYSTEM END*/
+	
+	bool IsDead() const;
+	void RespawnImmediately();
 private:
 	void BindGASChangedDelegates();
 	void DeathTagUpdated(const FGameplayTag Tag, int32 NewCount);

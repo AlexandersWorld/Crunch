@@ -79,6 +79,18 @@ UAbilitySystemComponent* ACrunchCharacter::GetAbilitySystemComponent() const
 	return CrunchAbilitySystemComponent;
 }
 
+bool ACrunchCharacter::IsDead() const
+{
+	return GetAbilitySystemComponent()->HasMatchingGameplayTag(UCrunchAbilitySystemStatics::GetDeadStatTag());
+}
+
+void ACrunchCharacter::RespawnImmediately()
+{
+	if (HasAuthority())
+		GetAbilitySystemComponent()->RemoveActiveEffectsWithGrantedTags(
+			FGameplayTagContainer(UCrunchAbilitySystemStatics::GetDeadStatTag()));
+}
+
 void ACrunchCharacter::BindGASChangedDelegates()
 {
 	if (CrunchAbilitySystemComponent)
@@ -152,7 +164,8 @@ void ACrunchCharacter::PlayDeathAnimation()
 
 void ACrunchCharacter::DeathMontageFinished()
 {
-	SetRagdollEnabled(true);
+	if (IsDead())
+		SetRagdollEnabled(true);
 }
 
 void ACrunchCharacter::SetRagdollEnabled(bool bIsEnabled)

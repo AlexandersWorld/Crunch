@@ -15,7 +15,6 @@ ACrunchMinion::ACrunchMinion()
 void ACrunchMinion::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 void ACrunchMinion::SetGenericTeamId(const FGenericTeamId& NewTeamID)
@@ -26,14 +25,12 @@ void ACrunchMinion::SetGenericTeamId(const FGenericTeamId& NewTeamID)
 
 bool ACrunchMinion::IsActive() const
 {
-	return !GetAbilitySystemComponent()->HasMatchingGameplayTag(
-		UCrunchAbilitySystemStatics::GetDeadStatTag());
+	return !IsDead();
 }
 
-void ACrunchMinion::Activate() const
+void ACrunchMinion::Activate()
 {
-	GetAbilitySystemComponent()->RemoveActiveEffectsWithGrantedTags(
-		FGameplayTagContainer(UCrunchAbilitySystemStatics::GetDeadStatTag()));
+	RespawnImmediately();
 }
 
 void ACrunchMinion::SetGoal(AActor* Goal) const

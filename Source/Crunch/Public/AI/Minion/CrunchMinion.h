@@ -17,7 +17,7 @@ public:
 
 	virtual void SetGenericTeamId(const FGenericTeamId& NewTeamID) override;
 	bool IsActive() const;
-	void Activate() const;
+	void Activate();
 	void SetGoal(AActor* Goal) const;
 protected:
 
