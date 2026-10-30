@@ -1,7 +1,10 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "GAS/Abilities/CrunchGameplayAbility.h"
+#include "AbilitySystemBlueprintLibrary.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "GameFramework/Character.h"
+#include "GAS/Abilities/UpperCut/GAP_Launched.h"
 #include "Kismet/KismetSystemLibrary.h"
 
 UAnimInstance* UCrunchGameplayAbility::GetOwnerAnimInstance() const
@@ -70,4 +73,38 @@ TArray<FHitResult> UCrunchGameplayAbility::GetHitResultFromSweepLocationTargetDa
 		}
 	}
 	return OutResults;
+}
+
+void UCrunchGameplayAbility::PushSelf(const FVector& PushVel)
+{
+	if (ACharacter* OwningAvatarCharacter = GetOwningAvatarCharacter())
+	{
+		OwningAvatarCharacter->LaunchCharacter(PushVel, true,true);
+	}
+}
+
+void UCrunchGameplayAbility::PushTarget(AActor* Target, const FVector& PushVel)
+{
+	if (!Target) return;
+	
+	FGameplayEventData EventData;
+	
+	FGameplayAbilityTargetData_SingleTargetHit* HitData = new FGameplayAbilityTargetData_SingleTargetHit;
+	
+	FHitResult HitResult;
+	HitResult.ImpactNormal = PushVel;
+	HitData->HitResult = HitResult;
+	EventData.TargetData.Add(HitData);
+	
+	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(Target, UGAP_Launched::GetLaunchedAbilityActivationTag(), EventData);
+}
+
+ACharacter* UCrunchGameplayAbility::GetOwningAvatarCharacter()
+{
+	if (!AvatarCharacter)
+	{
+		AvatarCharacter = Cast<ACharacter>(GetAvatarActorFromActorInfo());
+	}
+	
+	return AvatarCharacter;
 }

@@ -21,6 +21,9 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Targeting")
 	float TargetSweepSphereRadius {80.f};
 	
+	UPROPERTY(EditDefaultsOnly, Category = "Targeting")
+	float UpperCutLaunchSpeed {1000.f};
+	
 	UPROPERTY(EditDefaultsOnly, Category = "Animation")
 	UAnimMontage* UpperCutMontage;
 	
