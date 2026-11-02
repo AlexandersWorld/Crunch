@@ -108,3 +108,20 @@ ACharacter* UCrunchGameplayAbility::GetOwningAvatarCharacter()
 	
 	return AvatarCharacter;
 }
+
+void UCrunchGameplayAbility::ApplyGamePlayEffectToHitResultActor(const FHitResult& HitResult,
+	TSubclassOf<UGameplayEffect> GameplayEffect, int Level)
+{
+	const FGameplayEffectSpecHandle EffectSpecHandle = MakeOutgoingGameplayEffectSpec(GameplayEffect, Level);
+		
+	FGameplayEffectContextHandle EffectContext = MakeEffectContext(GetCurrentAbilitySpecHandle(), GetCurrentActorInfo());
+	EffectContext.AddHitResult(HitResult);
+		
+	EffectSpecHandle.Data->SetContext(EffectContext);
+		
+	ApplyGameplayEffectSpecToTarget(GetCurrentAbilitySpecHandle(),
+		CurrentActorInfo, 
+		CurrentActivationInfo, 
+		EffectSpecHandle, 
+		UAbilitySystemBlueprintLibrary::AbilityTargetDataFromActor(HitResult.GetActor()));
+}

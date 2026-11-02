@@ -36,7 +36,6 @@ FGameplayTag UUpperCut::GetUpperCutLaunchTag()
 
 void UUpperCut::StartLaunching(FGameplayEventData EventData)
 {
-	
 	if (K2_HasAuthority())
 	{
 		TArray<FHitResult> TargetHitResults = GetHitResultFromSweepLocationTargetData(
@@ -50,6 +49,7 @@ void UUpperCut::StartLaunching(FGameplayEventData EventData)
 		for (FHitResult& HitResult : TargetHitResults)
 		{
 			PushTarget(HitResult.GetActor(), FVector::UpVector * UpperCutLaunchSpeed);
+			ApplyGamePlayEffectToHitResultActor(HitResult, LaunchDamageEffect, GetAbilityLevel(CurrentSpecHandle, CurrentActorInfo));
 		}
 	}
 }
