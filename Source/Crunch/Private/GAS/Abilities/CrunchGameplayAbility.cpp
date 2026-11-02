@@ -4,8 +4,14 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "GameFramework/Character.h"
+#include "GAS/CrunchAbilitySystemStatics.h"
 #include "GAS/Abilities/UpperCut/GAP_Launched.h"
 #include "Kismet/KismetSystemLibrary.h"
+
+UCrunchGameplayAbility::UCrunchGameplayAbility()
+{
+	ActivationBlockedTags.AddTag(UCrunchAbilitySystemStatics::GetStunStatTag());
+}
 
 UAnimInstance* UCrunchGameplayAbility::GetOwnerAnimInstance() const
 {
@@ -107,4 +113,21 @@ ACharacter* UCrunchGameplayAbility::GetOwningAvatarCharacter()
 	}
 	
 	return AvatarCharacter;
+}
+
+void UCrunchGameplayAbility::ApplyGamePlayEffectToHitResultActor(const FHitResult& HitResult,
+	TSubclassOf<UGameplayEffect> GameplayEffect, int Level)
+{
+	const FGameplayEffectSpecHandle EffectSpecHandle = MakeOutgoingGameplayEffectSpec(GameplayEffect, Level);
+		
+	FGameplayEffectContextHandle EffectContext = MakeEffectContext(GetCurrentAbilitySpecHandle(), GetCurrentActorInfo());
+	EffectContext.AddHitResult(HitResult);
+		
+	EffectSpecHandle.Data->SetContext(EffectContext);
+		
+	ApplyGameplayEffectSpecToTarget(GetCurrentAbilitySpecHandle(),
+		CurrentActorInfo, 
+		CurrentActivationInfo, 
+		EffectSpecHandle, 
+		UAbilitySystemBlueprintLibrary::AbilityTargetDataFromActor(HitResult.GetActor()));
 }

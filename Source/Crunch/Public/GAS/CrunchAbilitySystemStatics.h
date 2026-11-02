@@ -14,4 +14,5 @@ class UCrunchAbilitySystemStatics : public UBlueprintFunctionLibrary
 public:
 	static FGameplayTag GetBasicAttackAbilityTag();
 	static FGameplayTag GetDeadStatTag();
+	static FGameplayTag GetStunStatTag();
 };

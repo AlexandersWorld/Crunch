@@ -21,8 +21,11 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Targeting")
 	float TargetSweepSphereRadius {80.f};
 	
-	UPROPERTY(EditDefaultsOnly, Category = "Targeting")
+	UPROPERTY(EditDefaultsOnly, Category = "Launch")
 	float UpperCutLaunchSpeed {1000.f};
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Launch")
+	TSubclassOf<UGameplayEffect> LaunchDamageEffect;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Animation")
 	UAnimMontage* UpperCutMontage;
@@ -31,4 +34,9 @@ private:
 	
 	UFUNCTION()
 	void StartLaunching(FGameplayEventData EventData);
+	
+	UFUNCTION()
+	void HandleComboChangeEvent(FGameplayEventData EventData);
+	
+	FName NextComboName;
 };

@@ -96,6 +96,7 @@ void ACrunchCharacter::BindGASChangedDelegates()
 	if (CrunchAbilitySystemComponent)
 	{
 		CrunchAbilitySystemComponent->RegisterGameplayTagEvent(UCrunchAbilitySystemStatics::GetDeadStatTag()).AddUObject(this, &ACrunchCharacter::DeathTagUpdated);
+		CrunchAbilitySystemComponent->RegisterGameplayTagEvent(UCrunchAbilitySystemStatics::GetStunStatTag()).AddUObject(this, &ACrunchCharacter::StunTagUpdated);
 	}
 }
 
@@ -108,6 +109,22 @@ void ACrunchCharacter::DeathTagUpdated(const FGameplayTag Tag, int32 NewCount)
 	else
 	{
 		Respawn();
+	}
+}
+
+void ACrunchCharacter::StunTagUpdated(const FGameplayTag Tag, int32 NewCount)
+{
+	if (IsDead()) return;
+	
+	if (NewCount != 0)
+	{
+		OnStun();
+		PlayAnimMontage(StunMontage);
+	}
+	else
+	{
+		OnRecoverFromStun();
+		StopAnimMontage(StunMontage);
 	}
 }
 
@@ -263,6 +280,14 @@ void ACrunchCharacter::SetAIPerceptionStimuliSourceEnabled(bool bIsEnabled)
 			PerceptionStimuliSourceComponent->UnregisterFromPerceptionSystem();
 		}
 	}
+}
+
+void ACrunchCharacter::OnStun()
+{
+}
+
+void ACrunchCharacter::OnRecoverFromStun()
+{
 }
 
 void ACrunchCharacter::SetGenericTeamId(const FGenericTeamId& InTeamID)

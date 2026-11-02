@@ -56,7 +56,12 @@ private:
 	void HandleLookInput(const FInputActionValue& InputActionValue);
 	void HandleMoveInput(const FInputActionValue& InputActionValue);
 	void HandleAbilityInput(const FInputActionValue& InputActionValue, ECrunchAbilityInputID InputID);
+
+	void SetInputEnabledFromPlayerController(const bool bEnabled);
 	
 	virtual void OnDead() override;
 	virtual void OnRespawn() override;
+	
+	virtual void OnStun() override;
+	virtual void OnRecoverFromStun() override;
 };

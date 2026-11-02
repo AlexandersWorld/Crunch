@@ -1,11 +1,14 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "GAS/Abilities/UpperCut/UpperCut.h"
+
+#include "GameplayTagsManager.h"
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 #include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
+#include "GAS/Abilities/Combo/GA_Combo.h"
 
 void UUpperCut::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
-	const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
+                                const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 	
@@ -27,6 +30,7 @@ void UUpperCut::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const F
 		WaitLaunchEventTask->EventReceived.AddDynamic(this, &UUpperCut::StartLaunching);
 		WaitLaunchEventTask->ReadyForActivation();
 	}
+	NextComboName = NAME_None;
 }
 
 FGameplayTag UUpperCut::GetUpperCutLaunchTag()
@@ -36,7 +40,6 @@ FGameplayTag UUpperCut::GetUpperCutLaunchTag()
 
 void UUpperCut::StartLaunching(FGameplayEventData EventData)
 {
-	
 	if (K2_HasAuthority())
 	{
 		TArray<FHitResult> TargetHitResults = GetHitResultFromSweepLocationTargetData(
@@ -50,6 +53,26 @@ void UUpperCut::StartLaunching(FGameplayEventData EventData)
 		for (FHitResult& HitResult : TargetHitResults)
 		{
 			PushTarget(HitResult.GetActor(), FVector::UpVector * UpperCutLaunchSpeed);
+			ApplyGamePlayEffectToHitResultActor(HitResult, LaunchDamageEffect, GetAbilityLevel(CurrentSpecHandle, CurrentActorInfo));
 		}
 	}
+	UAbilityTask_WaitGameplayEvent* WaitComboChangeEvent = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(this, UGA_Combo::GetComboChangedEventTag(),
+	nullptr, false, false);
+	WaitComboChangeEvent->EventReceived.AddDynamic(this, &UUpperCut::HandleComboChangeEvent);
+	WaitComboChangeEvent->ReadyForActivation();
+}
+
+void UUpperCut::HandleComboChangeEvent(FGameplayEventData EventData)
+{
+	FGameplayTag EventTag = EventData.EventTag;
+	if (EventTag == UGA_Combo::GetComboChangedEventEndTag())
+	{
+		NextComboName = NAME_None;
+		UE_LOG(LogTemp, Warning, TEXT("Next Combo is: %s"), *NextComboName.ToString())
+		return;
+	}
+	TArray<FName> TagNames;
+	UGameplayTagsManager::Get().SplitGameplayTagFName(EventTag, TagNames);
+	NextComboName = TagNames.Last();
+	UE_LOG(LogTemp, Warning, TEXT("Next Combo is: %s"), *NextComboName.ToString())
 }
