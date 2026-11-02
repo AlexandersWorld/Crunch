@@ -5,11 +5,14 @@
 #include "Components/ProgressBar.h"
 #include "Components/TextBlock.h"
 
-void UValueGauge::NativeConstruct()
+void UValueGauge::NativePreConstruct()
 {
-	Super::NativeConstruct();
-	
+	Super::NativePreConstruct();
 	ProgressBar->SetFillColorAndOpacity(BarColor);
+	
+	ValueText->SetFont(ValueTextFont);
+	ValueText->SetVisibility(bValueTexVisible ? ESlateVisibility::Visible : ESlateVisibility::Hidden);
+	ProgressBar->SetVisibility(bProgressBarVisible ? ESlateVisibility::Visible : ESlateVisibility::Hidden);
 }
 
 void UValueGauge::SetValue(float NewValue, float NewMaxValue)

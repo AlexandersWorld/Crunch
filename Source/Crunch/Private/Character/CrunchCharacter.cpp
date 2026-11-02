@@ -9,6 +9,9 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "Widgets/Gameplay/OverHeadStatsGauge.h"
 #include "Kismet/GameplayStatics.h"
+#include "Net/UnrealNetwork.h"
+#include "Perception/AIPerceptionStimuliSourceComponent.h"
+#include "Perception/AISense_Sight.h"
 
 ACrunchCharacter::ACrunchCharacter()
 {
@@ -20,6 +23,8 @@ ACrunchCharacter::ACrunchCharacter()
 	OverHeadWidgetComponent = CreateDefaultSubobject<UWidgetComponent>("Over Head Widget Component");
 	OverHeadWidgetComponent->SetupAttachment(GetRootComponent());
 	BindGASChangedDelegates();
+	
+	PerceptionStimuliSourceComponent = CreateDefaultSubobject<UAIPerceptionStimuliSourceComponent>("Perception Stimuli Source Component");
 }
 
 void ACrunchCharacter::BeginPlay()
@@ -27,6 +32,8 @@ void ACrunchCharacter::BeginPlay()
 	Super::BeginPlay();
 	ConfigureOverHeadStatusWidget();
 	MeshRelativeTransform = GetMesh()->GetRelativeTransform();
+	
+	PerceptionStimuliSourceComponent->RegisterForSense(UAISense_Sight::StaticClass());
 }
 
 void ACrunchCharacter::Tick(float DeltaTime)
@@ -61,9 +68,27 @@ bool ACrunchCharacter::IsLocallyControlledByPlayer() const
 	return GetController() && GetController()->IsLocalPlayerController();
 }
 
+void ACrunchCharacter::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(ACrunchCharacter, TeamID);
+}
+
 UAbilitySystemComponent* ACrunchCharacter::GetAbilitySystemComponent() const
 {
 	return CrunchAbilitySystemComponent;
+}
+
+bool ACrunchCharacter::IsDead() const
+{
+	return GetAbilitySystemComponent()->HasMatchingGameplayTag(UCrunchAbilitySystemStatics::GetDeadStatTag());
+}
+
+void ACrunchCharacter::RespawnImmediately()
+{
+	if (HasAuthority())
+		GetAbilitySystemComponent()->RemoveActiveEffectsWithGrantedTags(
+			FGameplayTagContainer(UCrunchAbilitySystemStatics::GetDeadStatTag()));
 }
 
 void ACrunchCharacter::BindGASChangedDelegates()
@@ -139,7 +164,8 @@ void ACrunchCharacter::PlayDeathAnimation()
 
 void ACrunchCharacter::DeathMontageFinished()
 {
-	SetRagdollEnabled(true);
+	if (IsDead())
+		SetRagdollEnabled(true);
 }
 
 void ACrunchCharacter::SetRagdollEnabled(bool bIsEnabled)
@@ -173,10 +199,17 @@ void ACrunchCharacter::UpdateHeadGaugeVisibility() const
 void ACrunchCharacter::StartDeathSequence()
 {
 	OnDead();
+	
+	if (CrunchAbilitySystemComponent)
+	{
+		CrunchAbilitySystemComponent->CancelAllAbilities();
+	}
+	
 	PlayDeathAnimation();
 	SetStatusGaugeEnable(false);
 	GetCharacterMovement()->SetMovementMode(MOVE_None);
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	SetAIPerceptionStimuliSourceEnabled(false);
 }
 
 void ACrunchCharacter::Respawn()
@@ -187,6 +220,7 @@ void ACrunchCharacter::Respawn()
 	GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
 	GetMesh()->GetAnimInstance()->StopAllMontages(0.f);
 	SetStatusGaugeEnable(true);
+	SetAIPerceptionStimuliSourceEnabled(true);
 	
 	if (HasAuthority() && GetController())
 	{
@@ -209,4 +243,34 @@ void ACrunchCharacter::OnDead()
 
 void ACrunchCharacter::OnRespawn()
 {
+}
+
+void ACrunchCharacter::OnRep_TeamID()
+{
+	// override in child class
+}
+
+void ACrunchCharacter::SetAIPerceptionStimuliSourceEnabled(bool bIsEnabled)
+{
+	if (PerceptionStimuliSourceComponent)
+	{
+		if (bIsEnabled)
+		{
+			PerceptionStimuliSourceComponent->RegisterWithPerceptionSystem();
+		}
+		else
+		{
+			PerceptionStimuliSourceComponent->UnregisterFromPerceptionSystem();
+		}
+	}
+}
+
+void ACrunchCharacter::SetGenericTeamId(const FGenericTeamId& InTeamID)
+{
+	TeamID = InTeamID;
+}
+
+FGenericTeamId ACrunchCharacter::GetGenericTeamId() const
+{
+	return TeamID;
 }

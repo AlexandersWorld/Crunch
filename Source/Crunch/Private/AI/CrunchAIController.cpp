@@ -1,8 +1,12 @@
 ﻿#include "AI/CrunchAIController.h"
 
+#include "AbilitySystemBlueprintLibrary.h"
+#include "AbilitySystemComponent.h"
+#include "GAS/CrunchAbilitySystemStatics.h"
 #include "Perception/AIPerceptionComponent.h"
 #include "Perception/AISenseConfig_Sight.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "BehaviorTree/BehaviorTreeComponent.h"
 
 ACrunchAIController::ACrunchAIController()
 {
@@ -34,11 +38,18 @@ void ACrunchAIController::BeginPlay()
 void ACrunchAIController::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
-	SetGenericTeamId(FGenericTeamId(0));
 	
 	if (IGenericTeamAgentInterface* PawnTeamInterface = Cast<IGenericTeamAgentInterface>(InPawn))
 	{
-		PawnTeamInterface->SetGenericTeamId(GetGenericTeamId());
+		SetGenericTeamId(PawnTeamInterface->GetGenericTeamId());
+		ClearAndDisableAllSenses();
+		EnableAllSenses();
+	}
+	
+	if (UAbilitySystemComponent* PawnASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(InPawn))
+	{
+		PawnASC->RegisterGameplayTagEvent(UCrunchAbilitySystemStatics::GetDeadStatTag())
+			.AddUObject(this, &ACrunchAIController::PawnDeadTagUpdated);
 	}
 }
 
@@ -53,8 +64,7 @@ void ACrunchAIController::TargetPerceptionUpdated(AActor* TargetActor,FAIStimulu
 	}
 	else
 	{
-		if (GetCurrentTarget() == TargetActor)
-			SetCurrentTarget(nullptr);
+		ForgetActorIfDead(TargetActor);
 	}
 }
 
@@ -105,4 +115,60 @@ AActor* ACrunchAIController::GetNextPerceivedActor() const
 		}
 	}
 	return nullptr;
+}
+
+void ACrunchAIController::ForgetActorIfDead(AActor* ActorToForget)
+{
+	if (const UAbilitySystemComponent* ActorASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(ActorToForget))
+	{
+		if (ActorASC->HasMatchingGameplayTag(UCrunchAbilitySystemStatics::GetDeadStatTag()))
+		{
+			for (UAIPerceptionComponent::TActorPerceptionContainer::TIterator It = AIPerceptionComponent->GetPerceptualDataIterator(); It; ++It)
+			{
+				if (It->Key != ActorToForget) continue;
+				
+				for (FAIStimulus& Stimulus : It->Value.LastSensedStimuli)
+				{
+					Stimulus.SetStimulusAge(TNumericLimits<float>::Max());
+				}
+			}
+		}
+	}
+}
+
+void ACrunchAIController::ClearAndDisableAllSenses()
+{
+	AIPerceptionComponent->AgeStimuli(TNumericLimits<float>::Max());
+	
+	for (auto SenseConfigIt = AIPerceptionComponent->GetSensesConfigIterator(); SenseConfigIt; ++SenseConfigIt)
+	{
+		AIPerceptionComponent->SetSenseEnabled((*SenseConfigIt)->GetSenseImplementation(), false);
+	}
+	
+	if (GetBlackboardComponent())
+	{
+		GetBlackboardComponent()->ClearValue(TargetBlackboardKeyName);
+	}
+}
+
+void ACrunchAIController::EnableAllSenses()
+{
+	for (auto SenseConfigIT = AIPerceptionComponent->GetSensesConfigIterator(); SenseConfigIT; ++SenseConfigIT)
+	{
+		AIPerceptionComponent->SetSenseEnabled((*SenseConfigIT)->GetSenseImplementation(), true);
+	}
+}
+
+void ACrunchAIController::PawnDeadTagUpdated(const FGameplayTag Tag, int32 Count)
+{
+	if (Count != 0)
+	{
+		GetBrainComponent()->StopLogic("Dead");
+		ClearAndDisableAllSenses();
+	}
+	else
+	{
+		GetBrainComponent()->StartLogic();
+		EnableAllSenses();
+	}
 }
