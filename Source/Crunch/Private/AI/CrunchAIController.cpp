@@ -48,8 +48,8 @@ void ACrunchAIController::OnPossess(APawn* InPawn)
 	
 	if (UAbilitySystemComponent* PawnASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(InPawn))
 	{
-		PawnASC->RegisterGameplayTagEvent(UCrunchAbilitySystemStatics::GetDeadStatTag())
-			.AddUObject(this, &ACrunchAIController::PawnDeadTagUpdated);
+		PawnASC->RegisterGameplayTagEvent(UCrunchAbilitySystemStatics::GetDeadStatTag()).AddUObject(this, &ACrunchAIController::PawnDeadTagUpdated);
+		PawnASC->RegisterGameplayTagEvent(UCrunchAbilitySystemStatics::GetStunStatTag()).AddUObject(this, &ACrunchAIController::PawnStunTagUpdated);
 	}
 }
 
@@ -165,10 +165,26 @@ void ACrunchAIController::PawnDeadTagUpdated(const FGameplayTag Tag, int32 Count
 	{
 		GetBrainComponent()->StopLogic("Dead");
 		ClearAndDisableAllSenses();
+		bPawnIsDead = true;
 	}
 	else
 	{
 		GetBrainComponent()->StartLogic();
 		EnableAllSenses();
+		bPawnIsDead = false;
+	}
+}
+
+void ACrunchAIController::PawnStunTagUpdated(const FGameplayTag Tag, int32 Count)
+{
+	if (bPawnIsDead) return;
+	
+	if (Count != 0)
+	{
+		GetBrainComponent()->StopLogic("Stun");
+	}
+	else
+	{
+		GetBrainComponent()->StartLogic();
 	}
 }

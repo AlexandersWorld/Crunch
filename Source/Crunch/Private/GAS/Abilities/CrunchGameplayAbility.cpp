@@ -4,8 +4,14 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "GameFramework/Character.h"
+#include "GAS/CrunchAbilitySystemStatics.h"
 #include "GAS/Abilities/UpperCut/GAP_Launched.h"
 #include "Kismet/KismetSystemLibrary.h"
+
+UCrunchGameplayAbility::UCrunchGameplayAbility()
+{
+	ActivationBlockedTags.AddTag(UCrunchAbilitySystemStatics::GetStunStatTag());
+}
 
 UAnimInstance* UCrunchGameplayAbility::GetOwnerAnimInstance() const
 {

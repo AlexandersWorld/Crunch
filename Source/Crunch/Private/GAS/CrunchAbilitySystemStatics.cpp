@@ -13,3 +13,8 @@ FGameplayTag UCrunchAbilitySystemStatics::GetDeadStatTag()
 {
 	return FGameplayTag::RequestGameplayTag("Stats.Dead");
 }
+
+FGameplayTag UCrunchAbilitySystemStatics::GetStunStatTag()
+{
+	return FGameplayTag::RequestGameplayTag("Stats.Stun");
+}

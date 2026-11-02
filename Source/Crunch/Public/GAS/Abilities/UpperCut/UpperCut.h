@@ -34,4 +34,9 @@ private:
 	
 	UFUNCTION()
 	void StartLaunching(FGameplayEventData EventData);
+	
+	UFUNCTION()
+	void HandleComboChangeEvent(FGameplayEventData EventData);
+	
+	FName NextComboName;
 };

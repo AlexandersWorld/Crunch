@@ -84,20 +84,40 @@ void ACrunchPlayerCharacter::HandleAbilityInput(const FInputActionValue& InputAc
 	}
 }
 
-void ACrunchPlayerCharacter::OnDead()
+void ACrunchPlayerCharacter::SetInputEnabledFromPlayerController(const bool bEnabled)
 {
 	if (APlayerController* PlayerController = GetController<APlayerController>())
 	{
-		DisableInput(PlayerController);
+		if (bEnabled)
+		{
+			EnableInput(PlayerController);
+		}
+		else
+		{
+			DisableInput(PlayerController);
+		}
 	}
+}
+
+void ACrunchPlayerCharacter::OnDead()
+{
+	SetInputEnabledFromPlayerController(false);
 }
 
 void ACrunchPlayerCharacter::OnRespawn()
 {
-	if (APlayerController* PlayerController = GetController<APlayerController>())
-	{
-		EnableInput(PlayerController);
-	}
+	SetInputEnabledFromPlayerController(true);
+}
+
+void ACrunchPlayerCharacter::OnStun()
+{
+	SetInputEnabledFromPlayerController(false);
+}
+
+void ACrunchPlayerCharacter::OnRecoverFromStun()
+{
+	if (IsDead()) return;
+	SetInputEnabledFromPlayerController(true);
 }
 
 FVector ACrunchPlayerCharacter::GetLookRightDirection() const

@@ -41,6 +41,7 @@ public:
 private:
 	void BindGASChangedDelegates();
 	void DeathTagUpdated(const FGameplayTag Tag, int32 NewCount);
+	void StunTagUpdated(const FGameplayTag Tag, int32 NewCount);
 	UPROPERTY(VisibleDefaultsOnly, Category = "Gameplay Ability")
 	UCrunchAbilitySystemComponent* CrunchAbilitySystemComponent;
 	
@@ -88,8 +89,13 @@ private:
 	UFUNCTION()
 	virtual void OnRep_TeamID();
 	
-private:
 	void SetAIPerceptionStimuliSourceEnabled(bool bIsEnabled);
 	UPROPERTY()
 	UAIPerceptionStimuliSourceComponent* PerceptionStimuliSourceComponent;
+	
+	UPROPERTY(EditDefaultsOnly, Category="Stun")
+	UAnimMontage* StunMontage;
+	
+	virtual void OnStun();
+	virtual void OnRecoverFromStun();
 };

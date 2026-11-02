@@ -3,6 +3,8 @@
 
 #include "GAS/Abilities/UpperCut/GAP_Launched.h"
 
+#include "GAS/CrunchAbilitySystemStatics.h"
+
 UGAP_Launched::UGAP_Launched()
 {
 	NetExecutionPolicy = EGameplayAbilityNetExecutionPolicy::ServerOnly;
@@ -10,6 +12,7 @@ UGAP_Launched::UGAP_Launched()
 	TriggerData.TriggerSource = EGameplayAbilityTriggerSource::GameplayEvent;
 	TriggerData.TriggerTag = GetLaunchedAbilityActivationTag();
 	
+	ActivationBlockedTags.RemoveTag(UCrunchAbilitySystemStatics::GetStunStatTag());
 	AbilityTriggers.Add(TriggerData);
 }
 
