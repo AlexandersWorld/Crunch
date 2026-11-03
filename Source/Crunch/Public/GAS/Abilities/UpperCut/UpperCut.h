@@ -24,6 +24,9 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Launch")
 	float UpperCutLaunchSpeed {1000.f};
 	
+		UPROPERTY(EditDefaultsOnly, Category = "Launch")
+    	float UpperCutHoldSpeed {100.f};
+	
 	UPROPERTY(EditDefaultsOnly, Category = "Launch")
 	TSubclassOf<UGameplayEffect> LaunchDamageEffect;
 	
@@ -40,6 +43,9 @@ private:
 	
 	UFUNCTION()
 	void HandleComboCommitEvent(FGameplayEventData EventData);
+	
+	UFUNCTION()
+	void HandleComboDamageEvent(FGameplayEventData EventData);
 	
 	FName NextComboName;
 };
