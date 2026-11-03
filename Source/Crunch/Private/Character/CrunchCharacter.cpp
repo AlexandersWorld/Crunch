@@ -1,5 +1,7 @@
 ﻿
 #include "Crunch/Public/Character/CrunchCharacter.h"
+
+#include "AbilitySystemBlueprintLibrary.h"
 #include "GAS/CrunchAbilitySystemComponent.h"
 #include "Components/WidgetComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -89,6 +91,18 @@ void ACrunchCharacter::RespawnImmediately()
 	if (HasAuthority())
 		GetAbilitySystemComponent()->RemoveActiveEffectsWithGrantedTags(
 			FGameplayTagContainer(UCrunchAbilitySystemStatics::GetDeadStatTag()));
+}
+
+void ACrunchCharacter::Server_SendGameplayEventToSelf_Implementation(const FGameplayTag& EventTag,
+	const FGameplayEventData& EventData)
+{
+	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(this, EventTag, EventData);
+}
+
+bool ACrunchCharacter::Server_SendGameplayEventToSelf_Validate(const FGameplayTag& EventTag,
+	const FGameplayEventData& EventData)
+{
+	return true;
 }
 
 void ACrunchCharacter::BindGASChangedDelegates()
