@@ -238,7 +238,7 @@ void ACrunchCharacter::StartDeathSequence()
 	
 	PlayDeathAnimation();
 	SetStatusGaugeEnable(false);
-	GetCharacterMovement()->SetMovementMode(MOVE_None);
+	//GetCharacterMovement()->SetMovementMode(MOVE_None);
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	SetAIPerceptionStimuliSourceEnabled(false);
 }
@@ -248,7 +248,7 @@ void ACrunchCharacter::Respawn()
 	OnRespawn();
 	SetRagdollEnabled(false);
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-	GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
+	//GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
 	GetMesh()->GetAnimInstance()->StopAllMontages(0.f);
 	SetStatusGaugeEnable(true);
 	SetAIPerceptionStimuliSourceEnabled(true);

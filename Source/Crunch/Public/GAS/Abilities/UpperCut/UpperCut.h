@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GAS/CrunchGameplayAbilityTypes.h"
 #include "GAS/Abilities/CrunchGameplayAbility.h"
 #include "UpperCut.generated.h"
 
@@ -18,14 +19,17 @@ public:
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
 	UUpperCut();
 private:
+	UPROPERTY(EditDefaultsOnly, Category = "Combo")
+	TMap<FName, FGenericDamageEffectDef> ComboDamageMap;
+	
 	UPROPERTY(EditDefaultsOnly, Category = "Targeting")
 	float TargetSweepSphereRadius {80.f};
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Launch")
 	float UpperCutLaunchSpeed {1000.f};
 	
-		UPROPERTY(EditDefaultsOnly, Category = "Launch")
-    	float UpperCutHoldSpeed {100.f};
+	UPROPERTY(EditDefaultsOnly, Category = "Launch")
+	float UpperCutHoldSpeed {100.f};
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Launch")
 	TSubclassOf<UGameplayEffect> LaunchDamageEffect;
@@ -34,6 +38,7 @@ private:
 	UAnimMontage* UpperCutMontage;
 	
 	static FGameplayTag GetUpperCutLaunchTag();
+	const FGenericDamageEffectDef* GetDamageEffectDefForCurrentCombo() const; 
 	
 	UFUNCTION()
 	void StartLaunching(FGameplayEventData EventData);
