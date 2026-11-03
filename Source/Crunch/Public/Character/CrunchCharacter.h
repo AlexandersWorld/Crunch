@@ -7,6 +7,7 @@
 #include "GameplayTagContainer.h"
 #include "AbilitySystemInterface.h"
 #include "GenericTeamAgentInterface.h"
+#include "Abilities/GameplayAbilityTypes.h"
 #include "CrunchCharacter.generated.h"
 
 class UCrunchAbilitySystemComponent;
@@ -38,6 +39,9 @@ public:
 	
 	bool IsDead() const;
 	void RespawnImmediately();
+	
+	UFUNCTION(Server, Reliable, WithValidation)
+	void Server_SendGameplayEventToSelf(const FGameplayTag& EventTag, const FGameplayEventData& EventData);
 private:
 	void BindGASChangedDelegates();
 	void DeathTagUpdated(const FGameplayTag Tag, int32 NewCount);

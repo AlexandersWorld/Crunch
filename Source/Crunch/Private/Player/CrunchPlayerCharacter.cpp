@@ -2,6 +2,7 @@
 
 #include "Player/CrunchPlayerCharacter.h"
 
+#include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
@@ -9,6 +10,7 @@
 #include "Net/UnrealNetwork.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "GAS/CrunchAbilitySystemStatics.h"
 
 ACrunchPlayerCharacter::ACrunchPlayerCharacter()
 {
@@ -71,8 +73,7 @@ void ACrunchPlayerCharacter::HandleMoveInput(const FInputActionValue& InputActio
 	AddMovementInput(GetMoveForwardDirection() * InputValue.Y + GetLookRightDirection() * InputValue.X);
 }
 
-void ACrunchPlayerCharacter::HandleAbilityInput(const FInputActionValue& InputActionValue,
-	ECrunchAbilityInputID InputID)
+void ACrunchPlayerCharacter::HandleAbilityInput(const FInputActionValue& InputActionValue, ECrunchAbilityInputID InputID)
 {
 	if (InputActionValue.Get<bool>())
 	{
@@ -81,6 +82,11 @@ void ACrunchPlayerCharacter::HandleAbilityInput(const FInputActionValue& InputAc
 	else
 	{
 		GetAbilitySystemComponent()->AbilityLocalInputReleased(static_cast<int32>(InputID));
+	}
+	if (InputID == ECrunchAbilityInputID::BasicAttack)
+	{
+		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(this, UCrunchAbilitySystemStatics::GetBasicAttackInputPressedTag(), FGameplayEventData());
+		Server_SendGameplayEventToSelf(UCrunchAbilitySystemStatics::GetBasicAttackInputPressedTag(), FGameplayEventData());
 	}
 }
 
