@@ -18,5 +18,14 @@ class CRUNCH_API UAbilityListView : public UListView
 	
 public:
 	void ConfigureAbilities(const TMap<ECrunchAbilityInputID, TSubclassOf<UGameplayAbility>>& Abilities);
-
+	
+protected:
+	
+private:
+	UPROPERTY(EditAnywhere, Category="Data")
+	UDataTable* AbilityDataTable;
+	
+	const struct FAbilityWidgetData* FindWidgetDataForAbility(const TSubclassOf<UGameplayAbility> AbilityClass) const;
+	
+	void AbilityGaugeGenerated(UUserWidget& Widget);
 };
