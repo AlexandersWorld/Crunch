@@ -57,3 +57,8 @@ void UCrunchAbilitySystemComponent::AuthApplyGameplayEffect(TSubclassOf<UGamepla
 		ApplyGameplayEffectSpecToSelf(*EffectSpecHandle.Data.Get());
 	}
 }
+
+const TMap<ECrunchAbilityInputID, TSubclassOf<UGameplayAbility>>& UCrunchAbilitySystemComponent::GetAbilities() const
+{
+	return InitialAbilities;
+}

@@ -51,5 +51,6 @@ void ACrunchPlayerController::SpawnGameplayWidget()
 	if (GameplayWidget)
 	{
 		GameplayWidget->AddToViewport();
+		GameplayWidget->ConfigureAbilities(CrunchPlayerCharacter->GetAbilities());
 	}
 }

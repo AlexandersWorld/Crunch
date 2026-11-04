@@ -8,6 +8,7 @@
 #include "AbilitySystemInterface.h"
 #include "GenericTeamAgentInterface.h"
 #include "Abilities/GameplayAbilityTypes.h"
+#include "GAS/CrunchGameplayAbilityTypes.h"
 #include "CrunchCharacter.generated.h"
 
 class UCrunchAbilitySystemComponent;
@@ -42,6 +43,7 @@ public:
 	
 	UFUNCTION(Server, Reliable, WithValidation)
 	void Server_SendGameplayEventToSelf(const FGameplayTag& EventTag, const FGameplayEventData& EventData);
+	const TMap<ECrunchAbilityInputID, TSubclassOf<UGameplayAbility>>& GetAbilities() const;
 private:
 	void BindGASChangedDelegates();
 	void DeathTagUpdated(const FGameplayTag Tag, int32 NewCount);

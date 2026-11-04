@@ -105,6 +105,11 @@ bool ACrunchCharacter::Server_SendGameplayEventToSelf_Validate(const FGameplayTa
 	return true;
 }
 
+const TMap<ECrunchAbilityInputID, TSubclassOf<UGameplayAbility>>& ACrunchCharacter::GetAbilities() const
+{
+	return CrunchAbilitySystemComponent->GetAbilities();
+}
+
 void ACrunchCharacter::BindGASChangedDelegates()
 {
 	if (CrunchAbilitySystemComponent)
