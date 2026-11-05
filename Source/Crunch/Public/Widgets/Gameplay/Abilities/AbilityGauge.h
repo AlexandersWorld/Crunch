@@ -49,6 +49,9 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category="Visial")
 	FName IconMaterialParamName {"Icon"};
 	
+	UPROPERTY(EditDefaultsOnly, Category="Visial")
+    FName CooldownPercentparamName {"Percent"};
+	
 	UPROPERTY(meta=(BindWidget))
 	UImage* Icon;
 	
