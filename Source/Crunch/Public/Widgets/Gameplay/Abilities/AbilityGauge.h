@@ -41,9 +41,16 @@ public:
 	void ConfigureWithWidgetData(const FAbilityWidgetData* WidgetData);
 protected:
 	virtual void NativeOnListItemObjectSet(UObject* ListItemObject) override;
+	virtual void NativeConstruct() override;
 private:
 	UPROPERTY(EditDefaultsOnly, Category="Visial")
+	float CooldownUpdateInterval {.1f};
+	
+	UPROPERTY(EditDefaultsOnly, Category="Visial")
 	FName IconMaterialParamName {"Icon"};
+	
+	UPROPERTY(EditDefaultsOnly, Category="Visial")
+    FName CooldownPercentparamName {"Percent"};
 	
 	UPROPERTY(meta=(BindWidget))
 	UImage* Icon;
@@ -56,4 +63,23 @@ private:
 	
 	UPROPERTY(meta=(BindWidget))
 	UTextBlock* CostText;
+	
+	UPROPERTY()
+	UGameplayAbility* AbilityCDO;
+	
+	void AbilityCommitted(UGameplayAbility* Ability);
+	
+	void StartCooldown(float CooldownTimeRemaining, float CooldownDuration);
+	
+	float CachedCooldownDuration {0.f};
+	float CachedCooldownTimeRemaining {0.f};
+	
+	FTimerHandle CooldownTimerHandle;
+	FTimerHandle CooldownTimerUpdatedHandle;
+	
+	FNumberFormattingOptions WholeNumberFormattingOptions;
+	FNumberFormattingOptions TwoDigitNumberFormattingOptions;
+	
+	void CooldownFinished();
+	void UpdateCooldown();
 };

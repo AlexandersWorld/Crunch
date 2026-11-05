@@ -7,6 +7,8 @@
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "CrunchAbilitySystemStatics.generated.h"
 
+class UGameplayAbility;
+
 UCLASS()
 class UCrunchAbilitySystemStatics : public UBlueprintFunctionLibrary
 {
@@ -16,4 +18,7 @@ public:
 	static FGameplayTag GetBasicAttackInputPressedTag();
 	static FGameplayTag GetDeadStatTag();
 	static FGameplayTag GetStunStatTag();
+	
+	static float GetStaticCooldownDurationForAbility(const UGameplayAbility* Ability);
+	static float GetStaticCostForAbility(const UGameplayAbility* Ability);
 };

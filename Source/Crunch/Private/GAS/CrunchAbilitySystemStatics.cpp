@@ -3,6 +3,7 @@
 
 #include "GAS/CrunchAbilitySystemStatics.h"
 #include "GameplayTagContainer.h"
+#include "Abilities/GameplayAbility.h"
 
 FGameplayTag UCrunchAbilitySystemStatics::GetBasicAttackAbilityTag()
 {
@@ -22,4 +23,32 @@ FGameplayTag UCrunchAbilitySystemStatics::GetDeadStatTag()
 FGameplayTag UCrunchAbilitySystemStatics::GetStunStatTag()
 {
 	return FGameplayTag::RequestGameplayTag("Stats.Stun");
+}
+
+float UCrunchAbilitySystemStatics::GetStaticCooldownDurationForAbility(const UGameplayAbility* Ability)
+{
+	float CooldownDuration {0.f};
+	
+	if (!Ability) return CooldownDuration;
+	
+	const UGameplayEffect* CooldownEffect = Ability->GetCooldownGameplayEffect();
+	if (!CooldownEffect) return CooldownDuration;
+	
+	CooldownEffect->DurationMagnitude.GetStaticMagnitudeIfPossible(1, CooldownDuration);
+	
+	return CooldownDuration;
+}
+
+float UCrunchAbilitySystemStatics::GetStaticCostForAbility(const UGameplayAbility* Ability)
+{
+	float Cost {0.f};
+	
+	if (!Ability) return Cost;
+	
+	const UGameplayEffect* CostEffect = Ability->GetCostGameplayEffect();
+	if (!CostEffect || CostEffect->Modifiers.Num() == 0) return Cost;
+	
+	CostEffect->Modifiers[0].ModifierMagnitude.GetStaticMagnitudeIfPossible(1, Cost);
+	
+	return FMath::Abs(Cost);
 }
