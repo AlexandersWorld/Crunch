@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "Animation/AnimInstance.h"
 #include "CrunchAnimInstance.generated.h"
 
@@ -26,6 +27,12 @@ public:
 	FORCEINLINE float GetYawSpeed() const { return YawSpeed; }
 	
 	UFUNCTION(BlueprintCallable, meta=(BlueprintThreadSafe))
+	FORCEINLINE float GetFwdSpeed() const { return FwdSpeed; }
+	
+	UFUNCTION(BlueprintCallable, meta=(BlueprintThreadSafe))
+	FORCEINLINE float GetRightSpeed() const { return RightSpeed; }
+	
+	UFUNCTION(BlueprintCallable, meta=(BlueprintThreadSafe))
 	FORCEINLINE float GetSmoothedYawSpeed() const { return SmoothedYawSpeed; }
 	
 	UFUNCTION(BlueprintCallable, meta=(BlueprintThreadSafe))
@@ -46,7 +53,14 @@ public:
 	UFUNCTION(BlueprintCallable, meta=(BlueprintThreadSafe))
 	FORCEINLINE bool GetIsOnGround() const { return !bIsJumping; }
 	
+	UFUNCTION(BlueprintCallable, meta=(BlueprintThreadSafe))
+	FORCEINLINE bool GetIsAiming() const { return bIsAiming; }
+	
+	UFUNCTION(BlueprintCallable, meta=(BlueprintThreadSafe))
+	bool ShouldDoFullBody() const;
+	
 private:
+	void OwnerAimTagChanged(const FGameplayTag Tag, int32 NewCount);
 	UPROPERTY()
 	TObjectPtr<ACharacter> OwnerCharacter;
 	UPROPERTY()
@@ -54,6 +68,8 @@ private:
 	
 	float Speed;
 	float YawSpeed;
+	float FwdSpeed;
+	float RightSpeed;
 	float SmoothedYawSpeed;
 	
 	bool bIsJumping;
