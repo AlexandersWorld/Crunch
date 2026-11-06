@@ -116,6 +116,7 @@ void ACrunchCharacter::BindGASChangedDelegates()
 	{
 		CrunchAbilitySystemComponent->RegisterGameplayTagEvent(UCrunchAbilitySystemStatics::GetDeadStatTag()).AddUObject(this, &ACrunchCharacter::DeathTagUpdated);
 		CrunchAbilitySystemComponent->RegisterGameplayTagEvent(UCrunchAbilitySystemStatics::GetStunStatTag()).AddUObject(this, &ACrunchCharacter::StunTagUpdated);
+		CrunchAbilitySystemComponent->RegisterGameplayTagEvent(UCrunchAbilitySystemStatics::GetAimStatTag()).AddUObject(this, &ACrunchCharacter::AimTagUpdated);
 	}
 }
 
@@ -145,6 +146,17 @@ void ACrunchCharacter::StunTagUpdated(const FGameplayTag Tag, int32 NewCount)
 		OnRecoverFromStun();
 		StopAnimMontage(StunMontage);
 	}
+}
+
+void ACrunchCharacter::AimTagUpdated(const FGameplayTag Tag, int32 NewCount)
+{
+	SetIsAiming(NewCount != 0);
+}
+
+void ACrunchCharacter::SetIsAiming(bool bIsAiming)
+{
+	bUseControllerRotationYaw = bIsAiming;
+	GetCharacterMovement()->bOrientRotationToMovement = !bIsAiming;
 }
 
 void ACrunchCharacter::ConfigureOverHeadStatusWidget()
