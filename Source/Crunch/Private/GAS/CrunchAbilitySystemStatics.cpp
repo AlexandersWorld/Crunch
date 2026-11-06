@@ -25,6 +25,11 @@ FGameplayTag UCrunchAbilitySystemStatics::GetStunStatTag()
 	return FGameplayTag::RequestGameplayTag("Stats.Stun");
 }
 
+FGameplayTag UCrunchAbilitySystemStatics::GetAimStatTag()
+{
+	return FGameplayTag::RequestGameplayTag("Stats.Aim");
+}
+
 float UCrunchAbilitySystemStatics::GetStaticCooldownDurationForAbility(const UGameplayAbility* Ability)
 {
 	float CooldownDuration {0.f};

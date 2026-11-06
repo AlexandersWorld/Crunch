@@ -57,6 +57,7 @@ private:
 	float SmoothedYawSpeed;
 	
 	bool bIsJumping;
+	bool bIsAiming;
 	
 	FRotator BodyPreviousRotation;
 	FRotator LookRotationOffset;
