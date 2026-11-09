@@ -157,6 +157,7 @@ void ACrunchCharacter::SetIsAiming(bool bIsAiming)
 {
 	bUseControllerRotationYaw = bIsAiming;
 	GetCharacterMovement()->bOrientRotationToMovement = !bIsAiming;
+	OnAimStageChanged(bIsAiming);
 }
 
 void ACrunchCharacter::ConfigureOverHeadStatusWidget()
@@ -329,4 +330,9 @@ void ACrunchCharacter::SetGenericTeamId(const FGenericTeamId& InTeamID)
 FGenericTeamId ACrunchCharacter::GetGenericTeamId() const
 {
 	return TeamID;
+}
+
+void ACrunchCharacter::OnAimStageChanged(bool bIsAiming)
+{
+	//Override in child class
 }

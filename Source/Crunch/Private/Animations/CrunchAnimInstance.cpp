@@ -38,7 +38,7 @@ void UCrunchAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 		LookRotationOffset = UKismetMathLibrary::NormalizedDeltaRotator(ControlRotation, BodyRotation);
 		
 		FwdSpeed = Velocity.Dot(ControlRotation.Vector());
-		RightSpeed = Velocity.Dot(ControlRotation.Vector().Cross(FVector::UpVector));
+		RightSpeed = -Velocity.Dot(ControlRotation.Vector().Cross(FVector::UpVector));
 	}
 	
 	if (OwnerMovementComponent)
