@@ -6,7 +6,6 @@
 #include "InputActionValue.h"
 #include "Character/CrunchCharacter.h"
 #include "GAS/CrunchGameplayAbilityTypes.h"
-#include "GenericTeamAgentInterface.h"
 #include "CrunchPlayerCharacter.generated.h"
 
 class UInputMappingContext;
@@ -30,11 +29,21 @@ private:
 	UPROPERTY(VisibleDefaultsOnly, Category = "View")
 	class UCameraComponent* ViewCam;
 	
+	UPROPERTY(EditDefaultsOnly, Category = "View")
+	FVector CameraAimLocalOffset;
+
+	UPROPERTY(EditDefaultsOnly, Category = "View")
+	float CameraLerpSpeed {20.f};
+	
+	FTimerHandle CameraLerpTimerHandle;
+	
+	void LerpCameraToLocalOffsetLocation(const FVector& Goal);
+	void TickCameraLocalOffsetLerp(FVector Goal);
+	
 	FVector GetLookRightDirection() const;
 	FVector GetLookForwardDirection() const;
 	FVector GetMoveForwardDirection() const;
 	
-private:
 	/**********************************************************/	
 	/*                           Input                        */
 	/**********************************************************/	
@@ -64,4 +73,6 @@ private:
 	
 	virtual void OnStun() override;
 	virtual void OnRecoverFromStun() override;
+	
+	virtual void OnAimStageChanged(bool bIsAiming) override;
 };

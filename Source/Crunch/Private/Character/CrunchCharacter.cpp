@@ -9,6 +9,7 @@
 #include "GAS/Attributes/CrunchAttributeSet.h"
 #include "GAS/CrunchAbilitySystemStatics.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "Crunch/Crunch.h"
 #include "Widgets/Gameplay/OverHeadStatsGauge.h"
 #include "Kismet/GameplayStatics.h"
 #include "Net/UnrealNetwork.h"
@@ -19,6 +20,8 @@ ACrunchCharacter::ACrunchCharacter()
 {
 	PrimaryActorTick.bCanEverTick = false;
 	GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_SpringArm, ECR_Ignore);
+	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Target, ECR_Ignore);
 	
 	CrunchAbilitySystemComponent = CreateDefaultSubobject<UCrunchAbilitySystemComponent>("Crunch AbilitySystem Component");
 	CrunchAttributeSet = CreateDefaultSubobject<UCrunchAttributeSet>("Crunch Attribute Set");
@@ -157,6 +160,7 @@ void ACrunchCharacter::SetIsAiming(bool bIsAiming)
 {
 	bUseControllerRotationYaw = bIsAiming;
 	GetCharacterMovement()->bOrientRotationToMovement = !bIsAiming;
+	OnAimStageChanged(bIsAiming);
 }
 
 void ACrunchCharacter::ConfigureOverHeadStatusWidget()
@@ -329,4 +333,9 @@ void ACrunchCharacter::SetGenericTeamId(const FGenericTeamId& InTeamID)
 FGenericTeamId ACrunchCharacter::GetGenericTeamId() const
 {
 	return TeamID;
+}
+
+void ACrunchCharacter::OnAimStageChanged(bool bIsAiming)
+{
+	//Override in child class
 }

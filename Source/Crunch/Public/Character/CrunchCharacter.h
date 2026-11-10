@@ -26,17 +26,18 @@ public:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 	virtual void PossessedBy(AController* NewController) override;
-	void ServerSideInit();
-	void ClientSideInit();
-	bool IsLocallyControlledByPlayer() const;
 	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
-	
 	virtual void SetGenericTeamId(const FGenericTeamId& InTeamID) override;
 	virtual FGenericTeamId GetGenericTeamId() const override;
-
+	virtual void OnAimStageChanged(bool bIsAiming);
+	
 	/*GAMEPLAY ABILITY SYSTEM START*/
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	/*GAMEPLAY ABILITY SYSTEM END*/
+	
+	void ServerSideInit();
+	void ClientSideInit();
+	bool IsLocallyControlledByPlayer() const;
 	
 	bool IsDead() const;
 	void RespawnImmediately();

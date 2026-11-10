@@ -7,7 +7,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "Camera/CameraComponent.h"
-#include "Net/UnrealNetwork.h"
+#include "Crunch/Crunch.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GAS/CrunchAbilitySystemStatics.h"
@@ -17,6 +17,7 @@ ACrunchPlayerCharacter::ACrunchPlayerCharacter()
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>("Camera Boom");
 	CameraBoom->SetupAttachment(RootComponent);
 	CameraBoom->bUsePawnControlRotation = true;
+	CameraBoom->ProbeChannel = ECC_SpringArm;
 	
 	ViewCam = CreateDefaultSubobject<UCameraComponent>("View Camera");
 	ViewCam->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
@@ -124,6 +125,33 @@ void ACrunchPlayerCharacter::OnRecoverFromStun()
 {
 	if (IsDead()) return;
 	SetInputEnabledFromPlayerController(true);
+}
+
+void ACrunchPlayerCharacter::OnAimStageChanged(bool bIsAiming)
+{
+	LerpCameraToLocalOffsetLocation(bIsAiming ? CameraAimLocalOffset : FVector{0.f});
+}
+
+void ACrunchPlayerCharacter::LerpCameraToLocalOffsetLocation(const FVector& Goal)
+{
+	GetWorldTimerManager().ClearTimer(CameraLerpTimerHandle);
+	GetWorldTimerManager().SetTimerForNextTick(FTimerDelegate::CreateUObject(this, &ACrunchPlayerCharacter::TickCameraLocalOffsetLerp, Goal));
+}
+
+void ACrunchPlayerCharacter::TickCameraLocalOffsetLerp(FVector Goal)
+{
+	FVector CurrentLocalOffset = ViewCam->GetRelativeLocation();
+	if (FVector::Dist(CurrentLocalOffset, Goal) < 1.f)
+	{
+		ViewCam->SetRelativeLocation(Goal);
+		return;
+	}
+	
+	float LerpAlpha = FMath::Clamp(GetWorld()->GetDeltaSeconds() * CameraLerpSpeed, 0.f, 1.f);
+	FVector NewLocalOffset = FMath::Lerp(CurrentLocalOffset, Goal, LerpAlpha);
+	ViewCam->SetRelativeLocation(NewLocalOffset);
+	
+	GetWorldTimerManager().SetTimerForNextTick(FTimerDelegate::CreateUObject(this, &ACrunchPlayerCharacter::TickCameraLocalOffsetLerp, Goal));
 }
 
 FVector ACrunchPlayerCharacter::GetLookRightDirection() const

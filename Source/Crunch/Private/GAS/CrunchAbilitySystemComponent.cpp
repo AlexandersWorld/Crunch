@@ -6,6 +6,8 @@
 UCrunchAbilitySystemComponent::UCrunchAbilitySystemComponent()
 {
 	GetGameplayAttributeValueChangeDelegate(UCrunchAttributeSet::GetHealthAttribute()).AddUObject(this, &UCrunchAbilitySystemComponent::HealthUpdated);
+	GenericConfirmInputID = static_cast<int32>(ECrunchAbilityInputID::Confirm);
+	GenericCancelInputID = static_cast<int32>(ECrunchAbilityInputID::Cancel);
 }
 
 void UCrunchAbilitySystemComponent::ApplyInitialEffects()
