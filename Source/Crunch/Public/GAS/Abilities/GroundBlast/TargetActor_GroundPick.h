@@ -20,8 +20,10 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	virtual void ConfirmTargetingAndContinue() override;
 	void SetTargetOptions(bool bTargetFriendly, bool bTargetEnemy = true);
-	
 	void SetTargetAreaRadius(float NewRadius);
+	
+	FORCEINLINE void SetTraceRangeLength(float TraceRangeLength) { TraceLength = TraceRangeLength; }
+	FORCEINLINE void SetShouldDrawDebug(bool bDrawDebug) { bShouldDrawDebug = bDrawDebug; }
 private:
 	FVector GetTargetPoint() const;
 	
@@ -33,4 +35,6 @@ private:
 	
 	bool bShouldTargetEnemy {true};
 	bool bShouldTargetFriendly {false};
+	
+	bool bShouldDrawDebug {false};
 };

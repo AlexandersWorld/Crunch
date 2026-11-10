@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GAS/CrunchGameplayAbilityTypes.h"
 #include "GAS/Abilities/CrunchGameplayAbility.h"
 #include "GA_GroundBlast.generated.h"
 
@@ -23,10 +24,18 @@ protected:
 	
 private:
 	UPROPERTY(EditDefaultsOnly, Category="Targeting")
+	float TargetAreaRadius {300.f};
+	UPROPERTY(EditDefaultsOnly, Category="Targeting")
+	float TraceLength {2000.f};
+	
+	UPROPERTY(EditDefaultsOnly, Category="Targeting")
 	TSubclassOf<ATargetActor_GroundPick> TargetActorClass;
 	
 	UPROPERTY(EditDefaultsOnly, Category="Animation")
 	UAnimMontage* GroundBlastMontage;
+	
+	UPROPERTY(EditDefaultsOnly, Category="Damage")
+	FGenericDamageEffectDef DamageEffectDef;
 	
 	UFUNCTION()
 	void TargetConfirmed(const FGameplayAbilityTargetDataHandle& TargetDataHandle);
