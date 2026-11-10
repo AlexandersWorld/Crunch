@@ -3,6 +3,7 @@
 
 #include "GAS/Abilities/GroundBlast/GA_GroundBlast.h"
 
+#include "AbilitySystemBlueprintLibrary.h"
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 #include "Abilities/Tasks/AbilityTask_WaitTargetData.h"
 #include "GAS/CrunchAbilitySystemStatics.h"
@@ -41,6 +42,13 @@ void UGA_GroundBlast::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 
 void UGA_GroundBlast::TargetConfirmed(const FGameplayAbilityTargetDataHandle& TargetDataHandle)
 {
+	TArray<AActor*> TargetActors = UAbilitySystemBlueprintLibrary::GetAllActorsFromTargetData(TargetDataHandle);
+	
+	for (AActor* TargetActor : TargetActors)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Find Target: %s"), *TargetActor->GetName());
+	}
+	
 	UE_LOG(LogTemp, Warning, TEXT("Target Confirmed"))
 	K2_EndAbility();
 }
