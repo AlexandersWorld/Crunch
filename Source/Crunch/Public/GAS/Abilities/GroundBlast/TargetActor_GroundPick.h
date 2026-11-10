@@ -14,4 +14,13 @@ class  ATargetActor_GroundPick : public AGameplayAbilityTargetActor
 {
 
 	GENERATED_BODY()
+	
+public:
+	ATargetActor_GroundPick();
+	virtual void Tick(float DeltaTime) override;
+private:
+	FVector GetTargetPoint() const;
+	
+	UPROPERTY(EditDefaultsOnly, Category="Targeting")
+	float TraceLength {2000.f};
 };

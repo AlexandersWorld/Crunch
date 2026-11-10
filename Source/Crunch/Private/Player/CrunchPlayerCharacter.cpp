@@ -7,7 +7,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "Camera/CameraComponent.h"
-#include "Net/UnrealNetwork.h"
+#include "Crunch/Crunch.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GAS/CrunchAbilitySystemStatics.h"
@@ -17,6 +17,7 @@ ACrunchPlayerCharacter::ACrunchPlayerCharacter()
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>("Camera Boom");
 	CameraBoom->SetupAttachment(RootComponent);
 	CameraBoom->bUsePawnControlRotation = true;
+	CameraBoom->ProbeChannel = ECC_SpringArm;
 	
 	ViewCam = CreateDefaultSubobject<UCameraComponent>("View Camera");
 	ViewCam->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
