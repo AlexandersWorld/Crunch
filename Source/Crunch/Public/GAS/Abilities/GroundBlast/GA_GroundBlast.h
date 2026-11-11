@@ -23,6 +23,9 @@ protected:
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
 	
 private:
+	UPROPERTY(EditDefaultsOnly, Category="Cue")
+	FGameplayTag BlastGameplayCueTag;
+	
 	UPROPERTY(EditDefaultsOnly, Category="Targeting")
 	float TargetAreaRadius {300.f};
 	UPROPERTY(EditDefaultsOnly, Category="Targeting")

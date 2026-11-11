@@ -14,11 +14,12 @@ class UCrunchAbilitySystemStatics : public UBlueprintFunctionLibrary
 {
 	GENERATED_BODY()
 public:
-	static FGameplayTag GetBasicAttackAbilityTag();
-	static FGameplayTag GetBasicAttackInputPressedTag();
 	static FGameplayTag GetDeadStatTag();
 	static FGameplayTag GetStunStatTag();
 	static FGameplayTag GetAimStatTag();
+	static FGameplayTag GetBasicAttackAbilityTag();
+	static FGameplayTag GetCameraShakeGameplayCueTag();
+	static FGameplayTag GetBasicAttackInputPressedTag();
 	
 	static float GetStaticCooldownDurationForAbility(const UGameplayAbility* Ability);
 	static float GetStaticCostForAbility(const UGameplayAbility* Ability);
