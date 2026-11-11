@@ -105,6 +105,20 @@ void UCrunchGameplayAbility::PushTarget(AActor* Target, const FVector& PushVel)
 	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(Target, UGAP_Launched::GetLaunchedAbilityActivationTag(), EventData);
 }
 
+void UCrunchGameplayAbility::PushTargets(const FGameplayAbilityTargetDataHandle& TargetDataHandle, const FVector& PushVel)
+{
+	TArray<AActor*> Targets = UAbilitySystemBlueprintLibrary::GetAllActorsFromTargetData(TargetDataHandle);
+	PushTargets(Targets, PushVel);
+}
+
+void UCrunchGameplayAbility::PushTargets(const TArray<AActor*>& Targets, const FVector& Velocity)
+{
+	for (AActor* Target : Targets)
+	{
+		PushTarget(Target, Velocity);
+	}
+}
+
 ACharacter* UCrunchGameplayAbility::GetOwningAvatarCharacter()
 {
 	if (!AvatarCharacter)

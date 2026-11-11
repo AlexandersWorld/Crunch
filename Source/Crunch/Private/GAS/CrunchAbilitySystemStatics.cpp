@@ -10,6 +10,11 @@ FGameplayTag UCrunchAbilitySystemStatics::GetBasicAttackAbilityTag()
 	return FGameplayTag::RequestGameplayTag("Ability.BasicAttack");
 }
 
+FGameplayTag UCrunchAbilitySystemStatics::GetCameraShakeGameplayCueTag()
+{
+	return FGameplayTag::RequestGameplayTag("GameplayCue.CameraShake");
+}
+
 FGameplayTag UCrunchAbilitySystemStatics::GetBasicAttackInputPressedTag()
 {
 	return FGameplayTag::RequestGameplayTag("Ability.BasicAttack.Pressed");

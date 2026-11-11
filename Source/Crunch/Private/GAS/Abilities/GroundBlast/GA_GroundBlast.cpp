@@ -4,6 +4,7 @@
 #include "GAS/Abilities/GroundBlast/GA_GroundBlast.h"
 
 #include "AbilitySystemBlueprintLibrary.h"
+#include "AbilitySystemComponent.h"
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 #include "Abilities/Tasks/AbilityTask_WaitTargetData.h"
 #include "GAS/CrunchAbilitySystemStatics.h"
@@ -51,8 +52,15 @@ void UGA_GroundBlast::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 void UGA_GroundBlast::TargetConfirmed(const FGameplayAbilityTargetDataHandle& TargetDataHandle)
 {
 	BP_ApplyGameplayEffectToTarget(TargetDataHandle, DamageEffectDef.DamageEffect, GetAbilityLevel(CurrentSpecHandle, CurrentActorInfo));
+	PushTargets(TargetDataHandle, DamageEffectDef.PushVelocity);	
 	
-	UE_LOG(LogTemp, Warning, TEXT("Target Confirmed"))
+	FGameplayCueParameters BlastingGameplayCueParams;
+	BlastingGameplayCueParams.Location = UAbilitySystemBlueprintLibrary::GetHitResultFromTargetData(TargetDataHandle, 1).ImpactPoint;
+	BlastingGameplayCueParams.RawMagnitude = TargetAreaRadius;
+	
+	GetAbilitySystemComponentFromActorInfo()->ExecuteGameplayCue(BlastGameplayCueTag, BlastingGameplayCueParams);
+	GetAbilitySystemComponentFromActorInfo()->ExecuteGameplayCue(UCrunchAbilitySystemStatics::GetCameraShakeGameplayCueTag(), BlastingGameplayCueParams);
+	
 	K2_EndAbility();
 }
 
