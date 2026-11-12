@@ -6,6 +6,8 @@
 #include "Abilities/GameplayAbilityTargetActor.h"
 #include "TargetActor_GroundPick.generated.h"
 
+class UDecalComponent;
+
 /**
  * 
  */
@@ -25,6 +27,9 @@ public:
 	FORCEINLINE void SetTraceRangeLength(float TraceRangeLength) { TraceLength = TraceRangeLength; }
 	FORCEINLINE void SetShouldDrawDebug(bool bDrawDebug) { bShouldDrawDebug = bDrawDebug; }
 private:
+	UPROPERTY(VisibleDefaultsOnly, Category="Visisual")
+	UDecalComponent* DecalComponent;
+	
 	FVector GetTargetPoint() const;
 	
 	UPROPERTY(EditDefaultsOnly, Category="Targeting")
