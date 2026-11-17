@@ -7,6 +7,7 @@
 #include "Widgets/CrunchUserWidget.h"
 #include "GameplayWidget.generated.h"
 
+class UStatsGauge;
 class UValueGauge;
 class UGameplayAbility;
 class UAbilityListView;
@@ -33,6 +34,21 @@ private:
 	
 	UPROPERTY(meta=(BindWidget))
 	UAbilityListView* AbilityListView;
+	
+	UPROPERTY(meta=(BindWidget))
+	UStatsGauge* AttackDamageGauge;
+	
+	UPROPERTY(meta=(BindWidget))
+	UStatsGauge* ArmorGauge;
+	
+	UPROPERTY(meta=(BindWidget))
+	UStatsGauge* MoveSpeedGauge;
+	
+	UPROPERTY(meta=(BindWidget))
+	UStatsGauge* IntelligenceGauge;
+	
+	UPROPERTY(meta=(BindWidget))
+	UStatsGauge* StrengthGauge;
 	
 	UPROPERTY()
 	UAbilitySystemComponent* OwnerAbilitySystemComponent;
