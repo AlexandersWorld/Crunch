@@ -8,8 +8,9 @@
 #include "GAS/CrunchGameplayAbilityTypes.h"
 #include "CrunchPlayerCharacter.generated.h"
 
-class UInputMappingContext;
 class UInputAction;
+class UInputMappingContext;
+class UCrunchHeroAttributeSet;
 
 UCLASS()
 class CRUNCH_API ACrunchPlayerCharacter : public ACrunchCharacter
@@ -75,4 +76,7 @@ private:
 	virtual void OnRecoverFromStun() override;
 	
 	virtual void OnAimStageChanged(bool bIsAiming) override;
+	
+	UPROPERTY()
+	UCrunchHeroAttributeSet* CrunchHeroAttributeSet;
 };

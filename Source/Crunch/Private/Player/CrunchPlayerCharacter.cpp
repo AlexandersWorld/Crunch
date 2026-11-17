@@ -11,6 +11,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GAS/CrunchAbilitySystemStatics.h"
+#include "GAS/Attributes/CrunchHeroAttributeSet.h"
 
 ACrunchPlayerCharacter::ACrunchPlayerCharacter()
 {
@@ -25,6 +26,8 @@ ACrunchPlayerCharacter::ACrunchPlayerCharacter()
 	bUseControllerRotationYaw = false;
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 720.0f, 0.0f);
+	
+	CrunchHeroAttributeSet = CreateDefaultSubobject<UCrunchHeroAttributeSet>("Hero Attribute Set");
 }
 
 void ACrunchPlayerCharacter::PawnClientRestart()
